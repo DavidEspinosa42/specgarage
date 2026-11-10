@@ -208,6 +208,15 @@ describe('data commands', () => {
 });
 
 describe('seed demo', () => {
+  it('tells the user to start the server on the same data directory when one was given', async () => {
+    const other = join(directory, 'elsewhere');
+    const withOverride = await cli(['seed', 'demo', '--data-dir', other]);
+    expect(withOverride.out).toContain(`pnpm start --data-dir "${other}"`);
+    const withoutOverride = await cli(['seed', 'demo']);
+    expect(withoutOverride.out).toContain('"pnpm start".');
+    expect(withoutOverride.out).not.toContain('--data-dir');
+  });
+
   it('explains how to recover when the data directory holds an earlier version of the demo', async () => {
     // Same edition label, different content: what an older demo would have left behind.
     const older = JSON.parse(readFileSync(demoRulepackPath, 'utf8'));
@@ -230,6 +239,7 @@ describe('seed demo', () => {
     expect(first.out).toContain('Added vehicle DEMO-01');
     const id = /Started demo inspection ([0-9a-f-]{36})/.exec(first.out)?.[1];
     expect(id).toBeDefined();
+    expect(first.out).toContain(`/#/inspection/${id}`);
 
     const second = await cli(['seed', 'demo']);
     expect(second.out).toContain('Already imported');

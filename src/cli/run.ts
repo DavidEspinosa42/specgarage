@@ -34,7 +34,7 @@ const DEMO_RULEPACK = fileURLToPath(
 
 const WEB_ROOT = fileURLToPath(new URL('../../dist/web', import.meta.url));
 
-export const USAGE = `SpecGarage - offline preparation checklists for single-make racing categories.
+const USAGE = `SpecGarage - offline preparation checklists for single-make racing categories.
 
 Usage: specgarage <command> [options]
 
@@ -392,6 +392,12 @@ export async function runCli(args: string[], io: CliIo): Promise<number> {
             });
           out(
             `${existing === undefined ? 'Started' : 'Existing'} demo inspection ${inspection.id}`,
+          );
+          // The server must read the same data directory this command wrote to.
+          const override =
+            typeof values['data-dir'] === 'string' ? ` --data-dir "${values['data-dir']}"` : '';
+          out(
+            `Open it at http://127.0.0.1:${config.port}/#/inspection/${inspection.id} after running "pnpm build" once and then "pnpm start${override}".`,
           );
         } finally {
           storage.close();
