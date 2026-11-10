@@ -15,13 +15,13 @@ function hostnameOf(host: string): string | null {
   return match?.[1]?.toLowerCase() ?? null;
 }
 
-export function isLocalHost(host: string | undefined): boolean {
+function isLocalHost(host: string | undefined): boolean {
   if (host === undefined) return false;
   const hostname = hostnameOf(host);
   return hostname !== null && LOCAL_HOSTNAMES.has(hostname);
 }
 
-export function isLocalOrigin(origin: string): boolean {
+function isLocalOrigin(origin: string): boolean {
   try {
     const url = new URL(origin);
     return url.protocol === 'http:' && LOCAL_HOSTNAMES.has(url.hostname.toLowerCase());

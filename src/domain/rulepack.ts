@@ -17,9 +17,7 @@ export const DOCUMENT_TYPES = ['technical', 'sporting', 'appendix', 'bulletin', 
 export const EVIDENCE_KINDS = ['photo', 'document'] as const;
 export const MANUAL_LABELS = ['obligation', 'prohibition', 'visual', 'procedural'] as const;
 
-export type DocumentType = (typeof DOCUMENT_TYPES)[number];
 export type EvidenceKind = (typeof EVIDENCE_KINDS)[number];
-export type ManualLabel = (typeof MANUAL_LABELS)[number];
 
 const KEY_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
 
@@ -262,13 +260,9 @@ export const rulepackSchema = z
 
 export type Rulepack = z.output<typeof rulepackSchema>;
 export type RulepackDocument = Rulepack['documents'][number];
-export type RulepackSystem = Rulepack['systems'][number];
-export type RulepackEvent = Rulepack['events'][number];
 export type Requirement = Rulepack['requirements'][number];
 export type Check = Requirement['check'];
 export type NumericCheck = Extract<Check, { type: 'min' | 'max' | 'range' }>;
-export type ManualCheck = Extract<Check, { type: 'manual' }>;
-export type SourceReference = Requirement['sources'][number];
 
 export interface RulepackIssue {
   /** Location in the file, for example `requirements[3].check.limit`. */
@@ -308,8 +302,4 @@ export function parseRulepack(raw: unknown): RulepackParseResult {
  */
 export function editionId(rulepack: Rulepack): string {
   return hashJson(rulepack);
-}
-
-export function findRequirement(rulepack: Rulepack, key: string): Requirement | undefined {
-  return rulepack.requirements.find((requirement) => requirement.key === key);
 }

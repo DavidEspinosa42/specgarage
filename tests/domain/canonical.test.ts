@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { canonicalJson, hashJson, sha256Hex } from '../../src/domain/canonical.ts';
-import { emptyStatusCounts, isStatus, STATUSES } from '../../src/domain/status.ts';
+import { emptyStatusCounts, STATUSES } from '../../src/domain/status.ts';
 
 describe('canonicalJson', () => {
   it('sorts keys at every level and removes whitespace', () => {
@@ -63,11 +63,5 @@ describe('status model', () => {
   it('creates zeroed counts for every status', () => {
     expect(Object.keys(emptyStatusCounts()).sort()).toEqual([...STATUSES].sort());
     expect(Object.values(emptyStatusCounts()).every((count) => count === 0)).toBe(true);
-  });
-
-  it('recognizes only real statuses', () => {
-    expect(isStatus('compliant')).toBe(true);
-    expect(isStatus('passed')).toBe(false);
-    expect(isStatus(undefined)).toBe(false);
   });
 });

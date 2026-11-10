@@ -23,14 +23,6 @@ export const STATUS_LABELS: Record<Status, string> = {
   conflict: 'Conflict',
 };
 
-/** Statuses that still need attention from the preparer. */
-export const OUTSTANDING_STATUSES: readonly Status[] = [
-  'pending',
-  'non-compliant',
-  'unverifiable',
-  'conflict',
-];
-
 export function emptyStatusCounts(): Record<Status, number> {
   return {
     pending: 0,
@@ -40,10 +32,6 @@ export function emptyStatusCounts(): Record<Status, number> {
     'not-applicable': 0,
     conflict: 0,
   };
-}
-
-export function isStatus(value: unknown): value is Status {
-  return typeof value === 'string' && (STATUSES as readonly string[]).includes(value);
 }
 
 export const NOT_OFFICIAL_NOTICE =
