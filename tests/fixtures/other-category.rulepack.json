@@ -1,0 +1,36 @@
+{
+  "schema": "specgarage.rulepack/1",
+  "category": { "code": "OTHER-CUP", "name": "Other Cup (fictional test category)" },
+  "season": "2026",
+  "edition": "2026-R1",
+  "language": "en",
+  "documents": [
+    {
+      "key": "TECH",
+      "title": "Technical Regulations (fictional)",
+      "type": "technical",
+      "effectiveFrom": "2026-01-01",
+      "effectiveTo": "2026-12-31",
+      "pageCount": 3
+    }
+  ],
+  "systems": [{ "key": "chassis", "name": "Chassis" }],
+  "events": [{ "key": "round-1", "name": "Round 1", "date": "2026-06-07" }],
+  "requirements": [
+    {
+      "key": "chasis-trocha-delantera-max",
+      "system": "chassis",
+      "title": "Maximum front track width",
+      "check": { "type": "max", "limit": "1500", "unit": "mm" },
+      "evidence": ["photo"],
+      "sources": [{ "document": "TECH", "article": "2", "page": 1 }]
+    },
+    {
+      "key": "wheel-width-max",
+      "system": "chassis",
+      "title": "Maximum wheel width",
+      "check": { "type": "max", "limit": "8.5", "unit": "in" },
+      "sources": [{ "document": "TECH", "article": "4-C", "page": 2 }]
+    }
+  ]
+}
