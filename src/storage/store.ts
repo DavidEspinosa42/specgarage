@@ -369,6 +369,15 @@ export class Store {
     return new Map(rows.map((observation) => [observation.requirementKey, observation]));
   }
 
+  /** How many observations each requirement has, counting superseded ones. */
+  observationCounts(inspectionId: string): Map<string, number> {
+    const rows = this.all(
+      'SELECT requirement_key, count(*) AS total FROM observations WHERE inspection_id = ? GROUP BY requirement_key',
+      inspectionId,
+    );
+    return new Map(rows.map((row) => [text(row, 'requirement_key'), integer(row, 'total')]));
+  }
+
   /** Every observation of a requirement, oldest first. */
   listObservations(inspectionId: string, requirementKey: string): ObservationRecord[] {
     return this.all(
