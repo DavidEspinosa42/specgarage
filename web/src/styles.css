@@ -451,6 +451,46 @@ button[aria-disabled="true"] {
   font-weight: 600;
 }
 
+.file-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+/* The real input stays focusable and available to assistive technology; it is only hidden visually. */
+.file-picker input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.file-button {
+  display: inline-block;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.file-button:hover {
+  background: var(--surface-2);
+}
+
+.file-picker input:focus-visible + .file-button {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.file-status {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
 .unit {
   font-weight: 400;
   color: var(--muted);

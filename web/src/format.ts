@@ -27,11 +27,12 @@ export const OUTSTANDING: readonly Status[] = [
   'conflict',
 ];
 
+/** Interface text is English, so dates are formatted in English whatever the browser locale. */
 export function formatTime(iso: string): string {
   const date = new Date(iso);
   return Number.isNaN(date.getTime())
     ? iso
-    : date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+    : date.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
 }
 
 export function formatBytes(bytes: number): string {

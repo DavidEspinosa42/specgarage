@@ -2,6 +2,7 @@ import { type FormEvent, useId, useRef, useState } from 'react';
 import { ApiError, api, blobUrl } from '../api.ts';
 import type { EvidenceView, RequirementView } from '../api-types.ts';
 import { formatBytes, formatTime, shortHash } from '../format.ts';
+import { FilePicker } from './FilePicker.tsx';
 import { HistoryList } from './HistoryList.tsx';
 import { RecordForm } from './RecordForm.tsx';
 import { StatusBadge } from './StatusBadge.tsx';
@@ -63,6 +64,8 @@ export function RequirementCard({ requirement, inspectionId, language, onChanged
   const [attaching, setAttaching] = useState(false);
   // True while an observation is being saved; the form stays mounted so its result is shown.
   const [recording, setRecording] = useState(false);
+  // Changing this key replaces the file picker, clearing the chosen files and their count.
+  const [pickerKey, setPickerKey] = useState(0);
   const lang = language ?? undefined;
   const current = requirement.current;
 
@@ -83,7 +86,7 @@ export function RequirementCard({ requirement, inspectionId, language, onChanged
     setAttachError(null);
     try {
       await api.attach(inspectionId, requirement.key, data);
-      if (attachFiles.current) attachFiles.current.value = '';
+      setPickerKey((key) => key + 1);
       await onChanged(`Evidence attached to “${requirement.title}”.`);
     } catch (failure) {
       setAttachError(failure instanceof ApiError ? failure.message : 'Something went wrong.');
@@ -162,13 +165,7 @@ export function RequirementCard({ requirement, inspectionId, language, onChanged
             onSubmit={attach}
           >
             <label htmlFor={`${headingId}-attach`}>Add evidence to this record</label>
-            <input
-              id={`${headingId}-attach`}
-              ref={attachFiles}
-              type="file"
-              multiple
-              accept="image/jpeg,image/png,image/webp,application/pdf"
-            />
+            <FilePicker key={pickerKey} id={`${headingId}-attach`} inputRef={attachFiles} />
             <button type="submit" aria-disabled={attaching}>
               {attaching ? 'Attaching…' : 'Attach'}
             </button>

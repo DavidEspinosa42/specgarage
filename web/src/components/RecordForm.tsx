@@ -1,6 +1,7 @@
 import { type FormEvent, useId, useRef, useState } from 'react';
 import { ApiError, api } from '../api.ts';
 import type { RequirementView } from '../api-types.ts';
+import { FilePicker } from './FilePicker.tsx';
 
 const VERDICTS = [
   { value: 'pass', label: 'Pass', hint: 'satisfies the requirement' },
@@ -168,14 +169,7 @@ export function RecordForm({
 
       <div className="field">
         <label htmlFor={`${id}-files`}>Evidence files</label>
-        <input
-          id={`${id}-files`}
-          ref={files}
-          type="file"
-          multiple
-          accept="image/jpeg,image/png,image/webp,application/pdf"
-          aria-describedby={`${id}-files-hint`}
-        />
+        <FilePicker id={`${id}-files`} inputRef={files} describedBy={`${id}-files-hint`} />
         <p id={`${id}-files-hint`} className="hint">
           {needs.length > 0
             ? `Required for a result: ${needs.join(' and ')}. `
