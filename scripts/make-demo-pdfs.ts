@@ -28,7 +28,7 @@ const technical: DocumentSpec = {
   title: 'REGLAMENTO TÉCNICO - COPA DEMO MONOMARCA 2026',
   pages: [
     {
-      heading: 'Disposiciónes generales',
+      heading: 'Disposiciones generales',
       lines: [
         'A: Concurrentes y mecánicos deben conocer este reglamento y el reglamento deportivo.',
         'B: Todo elemento no mencionado expresamente como autorizado se considera prohibido.',
@@ -38,7 +38,7 @@ const technical: DocumentSpec = {
         '',
         'Contenido: 2-Chasis  3-Trocha delantera  4-Trocha trasera  5-Peso  7-Neumáticos',
         '8-Adquisición de datos  9-Verificación previa  10-Numeración  11-Frenos',
-        '12-Combustible  13-Seguridad  14-Señalización electronica  15-Interpretación',
+        '12-Combustible  13-Seguridad  14-Señalización electrónica  15-Interpretación',
       ],
     },
     {
@@ -70,10 +70,10 @@ const technical: DocumentSpec = {
       heading: 'Datos, verificación previa y precintos',
       lines: [
         '8- ADQUISICIÓN DE DATOS: Solo se permite el sistema de adquisición de datos',
-        'autorizado por la categoría. Cualquier otro GPS o sistema de telemetria está prohibido.',
+        'autorizado por la categoría. Cualquier otro GPS o sistema de telemetría está prohibido.',
         '',
         '9- VERIFICACIÓN TÉCNICA PREVIA: Antes de la clasificación cada auto se presenta en la',
-        'verificación técnica. Sin este tramite el auto no está habilitado para competir.',
+        'verificación técnica. Sin este trámite el auto no está habilitado para competir.',
         'Se precinta el motor; el precinto debe estar íntegro y con su numeración registrada.',
       ],
     },

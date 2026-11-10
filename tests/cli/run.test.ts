@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -208,6 +208,21 @@ describe('data commands', () => {
 });
 
 describe('seed demo', () => {
+  it('explains how to recover when the data directory holds an earlier version of the demo', async () => {
+    // Same edition label, different content: what an older demo would have left behind.
+    const older = JSON.parse(readFileSync(demoRulepackPath, 'utf8'));
+    for (const document of older.documents) delete document.file;
+    const path = join(directory, 'older-demo.json');
+    writeFileSync(path, JSON.stringify(older));
+    expect((await cli(['rulepack', 'import', path])).status).toBe(0);
+
+    const result = await cli(['seed', 'demo']);
+    expect(result.status).toBe(1);
+    expect(result.err).toContain('already exists with different content');
+    expect(result.err).toContain('earlier version of the demo');
+    expect(result.err).toContain('new --data-dir');
+  });
+
   it('sets up the demo category, vehicle, and inspection, and is repeatable', async () => {
     const first = await cli(['seed', 'demo']);
     expect(first.status).toBe(0);

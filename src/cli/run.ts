@@ -63,6 +63,25 @@ inspection start options:
 Results are internal assessments, not official inspections or certification.
 `;
 
+/**
+ * Imports the bundled demo. Editions are immutable, so a data directory created by an
+ * earlier version of the demo (whose documents have since been corrected) conflicts
+ * with the same edition label; say how to recover instead of only reporting the conflict.
+ */
+function importDemo(ctx: ServiceContext) {
+  try {
+    return importEdition(ctx, loadRulepackFile(DEMO_RULEPACK));
+  } catch (error) {
+    if (error instanceof SpecGarageError && error.code === 'conflict') {
+      throw new SpecGarageError('conflict', error.message, [
+        'This data directory probably holds an earlier version of the demo.',
+        'Use a new --data-dir (or remove the old one), then run "seed demo" again.',
+      ]);
+    }
+    throw error;
+  }
+}
+
 class UsageError extends Error {
   constructor(message: string) {
     super(message);
@@ -347,7 +366,7 @@ export async function runCli(args: string[], io: CliIo): Promise<number> {
         const { values } = parse(rest, {});
         const { storage, ctx } = openContext(config, values['data-dir']);
         try {
-          const outcome = importEdition(ctx, loadRulepackFile(DEMO_RULEPACK));
+          const outcome = importDemo(ctx);
           out(
             `${outcome.status === 'imported' ? 'Imported' : 'Already imported'}: ${outcome.categoryCode} ${outcome.season} ${outcome.edition}`,
           );
