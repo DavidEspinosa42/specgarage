@@ -84,10 +84,15 @@ export function createApp(options: AppOptions): Hono {
 
   app.post('/api/inspections/:id/requirements/:key/evidence', uploadLimit, async (c) => {
     const inspection = resolveInspection(ctx, c.req.param('id'));
-    const { files } = await readUpload(c, maxUploadBytes);
+    const { form, files } = await readUpload(c, maxUploadBytes);
+    const observation = textField(form, 'observationId');
+    if (observation === undefined || !/^[0-9]{1,12}$/.test(observation)) {
+      throw new HttpError(400, 'Send the observationId the files were prepared for.');
+    }
     const view = addEvidence(ctx, {
       inspectionId: inspection.id,
       requirementKey: c.req.param('key'),
+      observationId: Number(observation),
       files,
     });
     return c.json({ notice: NOT_OFFICIAL_NOTICE, requirement: view }, 201);

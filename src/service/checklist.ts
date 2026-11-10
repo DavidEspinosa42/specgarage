@@ -42,6 +42,12 @@ export interface RecordObservationInput {
 export interface AddEvidenceInput {
   inspectionId: string;
   requirementKey: string;
+  /**
+   * The observation the files were prepared for. If the requirement has been recorded
+   * again since, the upload is refused instead of attaching to the newer observation,
+   * which could make a result look supported by evidence that belongs to something else.
+   */
+  observationId: number;
   files: readonly Uint8Array[];
 }
 
@@ -392,6 +398,12 @@ export function addEvidence(ctx: ServiceContext, input: AddEvidenceInput): Requi
     throw new SpecGarageError(
       'conflict',
       'Record a measurement or verdict before attaching evidence to this requirement.',
+    );
+  }
+  if (input.observationId !== current.id) {
+    throw new SpecGarageError(
+      'conflict',
+      'This requirement was recorded again after the page was loaded. Reload the checklist and attach the evidence to the current record if it still applies.',
     );
   }
   if (input.files.length === 0)

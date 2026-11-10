@@ -310,6 +310,17 @@ describe('re-measuring and history', () => {
   });
 });
 
+/** Attaches files to the requirement's current observation, as a page that just loaded it would. */
+const attach = (requirementKey: string, files: Uint8Array[]) => {
+  const current = env.ctx.store.currentObservations(inspectionId).get(requirementKey);
+  return addEvidence(env.ctx, {
+    inspectionId,
+    requirementKey,
+    observationId: current?.id ?? 0,
+    files,
+  });
+};
+
 describe('addEvidence', () => {
   it('turns an Unverifiable result into a judged one and keeps both results', () => {
     const before = record(TRACK, {
@@ -320,7 +331,7 @@ describe('addEvidence', () => {
     expect(before.status).toBe('unverifiable');
 
     env.advance(30);
-    const after = addEvidence(env.ctx, { inspectionId, requirementKey: TRACK, files: [jpeg()] });
+    const after = attach(TRACK, [jpeg()]);
     expect(after.status).toBe('compliant');
     expect(after.observationCount).toBe(1);
     expect(after.current?.evidence).toHaveLength(1);
@@ -331,53 +342,71 @@ describe('addEvidence', () => {
 
   it('counts a PDF as a document, not a photo', () => {
     record(EXTINGUISHER, { verdict: 'pass' });
-    const withPdf = addEvidence(env.ctx, {
-      inspectionId,
-      requirementKey: EXTINGUISHER,
-      files: [pdf()],
-    });
+    const withPdf = attach(EXTINGUISHER, [pdf()]);
     expect(withPdf.status).toBe('unverifiable');
     expect(withPdf.current?.evidence[0]?.kind).toBe('document');
-    const withPhoto = addEvidence(env.ctx, {
-      inspectionId,
-      requirementKey: EXTINGUISHER,
-      files: [jpeg()],
-    });
+    const withPhoto = attach(EXTINGUISHER, [jpeg()]);
     expect(withPhoto.status).toBe('compliant');
     expect(withPhoto.current?.evidence).toHaveLength(2);
   });
 
   it('requires an observation first, and at least one valid file', () => {
-    expectError(
-      () => addEvidence(env.ctx, { inspectionId, requirementKey: TRACK, files: [jpeg()] }),
-      'conflict',
-      /Record a measurement or verdict/,
-    );
+    expectError(() => attach(TRACK, [jpeg()]), 'conflict', /Record a measurement or verdict/);
     record(TRACK, { value: '1', unit: 'mm' });
-    expectError(
-      () => addEvidence(env.ctx, { inspectionId, requirementKey: TRACK, files: [] }),
-      'invalid-input',
-    );
-    expectError(
-      () =>
-        addEvidence(env.ctx, {
-          inspectionId,
-          requirementKey: TRACK,
-          files: [new TextEncoder().encode('x')],
-        }),
-      'invalid-input',
-    );
+    expectError(() => attach(TRACK, []), 'invalid-input');
+    expectError(() => attach(TRACK, [new TextEncoder().encode('x')]), 'invalid-input');
   });
 
   it('stores identical files once but attaches them each time', () => {
     record(TRACK, { value: '1658', unit: 'mm' });
-    addEvidence(env.ctx, { inspectionId, requirementKey: TRACK, files: [jpeg(9)] });
-    addEvidence(env.ctx, { inspectionId, requirementKey: TRACK, files: [jpeg(9)] });
+    attach(TRACK, [jpeg(9)]);
+    attach(TRACK, [jpeg(9)]);
     const track = find(getChecklist(env.ctx, inspectionId), TRACK);
     expect(track.current?.evidence).toHaveLength(2);
     expect(
       env.ctx.store.listBlobs().filter((blob) => blob.mediaType === 'image/jpeg'),
     ).toHaveLength(1);
+  });
+
+  it('refuses evidence prepared for an observation that has since been superseded', () => {
+    // The page showed the first record; before the upload arrived, the requirement was recorded again.
+    record(TRACK, { value: '1661', unit: 'mm', confirmedConditions: ['reposo-plano'] });
+    const staleId = env.ctx.store.currentObservations(inspectionId).get(TRACK)?.id ?? 0;
+    record(TRACK, { value: '1658', unit: 'mm', confirmedConditions: ['reposo-plano'] });
+
+    expectError(
+      () =>
+        addEvidence(env.ctx, {
+          inspectionId,
+          requirementKey: TRACK,
+          observationId: staleId,
+          files: [jpeg(3)],
+        }),
+      'conflict',
+      /recorded again/,
+    );
+
+    // The newer record must not pick up evidence that was meant for the older one.
+    const track = find(getChecklist(env.ctx, inspectionId), TRACK);
+    expect(track.status).toBe('unverifiable');
+    expect(track.current?.evidence).toEqual([]);
+    expect(env.ctx.store.listBlobs().filter((blob) => blob.mediaType === 'image/jpeg')).toEqual([]);
+  });
+
+  it('refuses an observation id that belongs to another requirement', () => {
+    record(TRACK, { value: '1658', unit: 'mm' });
+    record(WEIGHT, { value: '1200', unit: 'kg' });
+    const weightId = env.ctx.store.currentObservations(inspectionId).get(WEIGHT)?.id ?? 0;
+    expectError(
+      () =>
+        addEvidence(env.ctx, {
+          inspectionId,
+          requirementKey: TRACK,
+          observationId: weightId,
+          files: [jpeg()],
+        }),
+      'conflict',
+    );
   });
 });
 
@@ -400,7 +429,7 @@ describe('reproducibility', () => {
 
   it('re-evaluating every stored result from its stored inputs gives the same answer', () => {
     record(TRACK, { value: '1661', unit: 'mm', confirmedConditions: ['reposo-plano'] });
-    addEvidence(env.ctx, { inspectionId, requirementKey: TRACK, files: [jpeg()] });
+    attach(TRACK, [jpeg()]);
     record(TRACK, {
       value: '1658',
       unit: 'mm',

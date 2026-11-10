@@ -51,7 +51,7 @@ const jpeg = (n = 0) => Uint8Array.from([0xff, 0xd8, 0xff, 0xe0, 0, 0x10, n]);
 
 interface RequirementBody {
   status: string;
-  current: { value: string; evidence: { kind: string; sha256: string }[] };
+  current: { id: number; value: string; evidence: { kind: string; sha256: string }[] };
 }
 
 /** Reads a result-bearing response, which must carry the not-official notice. */
@@ -328,22 +328,65 @@ describe('recording', () => {
 });
 
 describe('evidence and history', () => {
-  it('attaches more evidence to the current observation', async () => {
-    await post(
-      trackPath('/observations'),
-      form({ value: '1658', unit: 'mm', conditions: ['reposo-plano'] }),
+  const recordTrack = async (value: string, files: Uint8Array[] = []) =>
+    requirementOf(
+      await post(
+        trackPath('/observations'),
+        form({ value, unit: 'mm', conditions: ['reposo-plano'] }, files),
+      ),
     );
-    const response = await post(trackPath('/evidence'), form({}, [jpeg()]));
+
+  it('attaches more evidence to the observation the files were prepared for', async () => {
+    const recorded = await recordTrack('1658');
+    const response = await post(
+      trackPath('/evidence'),
+      form({ observationId: String(recorded.current.id) }, [jpeg()]),
+    );
     expect(response.status).toBe(201);
     expect((await requirementOf(response)).status).toBe('compliant');
   });
 
   it('answers 409 when there is no observation yet', async () => {
-    const response = await post(trackPath('/evidence'), form({}, [jpeg()]));
+    const response = await post(trackPath('/evidence'), form({ observationId: '1' }, [jpeg()]));
     expect(response.status).toBe(409);
     expect(((await response.json()) as { message: string }).message).toMatch(
       /Record a measurement/,
     );
+  });
+
+  it('requires a well-formed observationId', async () => {
+    await recordTrack('1658');
+    const invalid: Record<string, string>[] = [
+      {},
+      { observationId: 'abc' },
+      { observationId: '-1' },
+      { observationId: '1.5' },
+    ];
+    for (const fields of invalid) {
+      const response = await post(trackPath('/evidence'), form(fields, [jpeg()]));
+      expect(response.status, JSON.stringify(fields)).toBe(400);
+    }
+  });
+
+  it('refuses evidence prepared for a superseded observation, so it cannot attach to the newer one', async () => {
+    const first = await recordTrack('1661');
+    const second = await recordTrack('1658');
+    expect(second.current.id).not.toBe(first.current.id);
+
+    const late = await post(
+      trackPath('/evidence'),
+      form({ observationId: String(first.current.id) }, [jpeg(5)]),
+    );
+    expect(late.status).toBe(409);
+    expect(((await late.json()) as { message: string }).message).toMatch(/recorded again/);
+
+    const view = (await (await call(`/api/inspections/${inspectionId}`)).json()) as {
+      systems: { requirements: { key: string; status: string }[] }[];
+    };
+    const track = view.systems
+      .flatMap((s) => s.requirements)
+      .find((r) => r.key === 'chasis-trocha-delantera-max');
+    expect(track?.status).toBe('unverifiable');
   });
 
   it('returns the history oldest first', async () => {
