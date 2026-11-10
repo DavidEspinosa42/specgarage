@@ -1,0 +1,12 @@
+# Supply-chain policy. Versions must be at least 7 days old (10080 minutes)
+# before pnpm will install them, including transitive dependencies. Because the
+# value is set explicitly, resolution fails instead of falling back to a newer
+# version.
+minimumReleaseAge: 10080
+
+# Direct dependencies are pinned to exact versions.
+saveExact: true
+
+# Dependency build scripts are blocked unless listed here. Nothing is allowed
+# yet; add an entry only after reviewing the package.
+allowBuilds: {}

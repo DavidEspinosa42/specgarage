@@ -1,0 +1,25 @@
+{
+  "name": "specgarage",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Offline technical preparation and compliance documentation for single-make racing categories.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=26.13.0 <27"
+  },
+  "packageManager": "pnpm@12.17.0",
+  "scripts": {
+    "check": "pnpm lint && pnpm typecheck",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.4",
+    "@types/node": "26.6.6",
+    "typescript": "7.0.2",
+    "vitest": "5.1.0"
+  }
+}
