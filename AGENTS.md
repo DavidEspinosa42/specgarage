@@ -71,7 +71,7 @@ The layout is described in [docs/architecture.md](docs/architecture.md). The rul
 
 - One coherent concern per commit, Conventional Commit subjects (`feat:`, `fix:`, `docs:`, `test:`, `build:`, `ci:`, `chore:`).
 - Run an independent review of the changes before each commit and address real findings. State plainly which checks actually ran.
-- Commits that include AI-generated work carry a `Co-Authored-By` trailer naming the assistant. Do not rewrite history or invent activity.
+- Commits are authored by the repository owner. Do not invent activity or backdate commits.
 
 ## Documentation
 
