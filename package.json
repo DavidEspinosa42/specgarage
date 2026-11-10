@@ -12,9 +12,10 @@
   "scripts": {
     "check": "pnpm lint && pnpm typecheck",
     "lint": "biome check .",
-    "format": "biome format --write .",
+    "format": "biome check --write .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "specgarage": "node src/cli/main.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.4",
