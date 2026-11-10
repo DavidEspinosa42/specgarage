@@ -6,7 +6,7 @@ import { createContext, type ServiceContext } from '../src/service/context.ts';
 import { openStorage, type Storage } from '../src/storage/open.ts';
 
 export const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
-export const demoRulepackPath = join(projectRoot, 'examples', 'demo-monomarca', 'rulepack.json');
+export const demoRulepackPath = join(projectRoot, 'examples', 'demo-cup', 'rulepack.json');
 export const otherRulepackPath = join(
   projectRoot,
   'tests',

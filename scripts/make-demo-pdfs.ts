@@ -1,5 +1,5 @@
 /**
- * Generates the fictional demo regulation PDFs in examples/demo-monomarca/.
+ * Generates the fictional demo regulation PDFs in examples/demo-cup/.
  *
  * Usage: node scripts/make-demo-pdfs.ts
  *
@@ -21,123 +21,121 @@ interface DocumentSpec {
   pages: PageSpec[];
 }
 
-const NOTICE = 'Documento ficticio de demostración de SpecGarage. No es un reglamento real.';
+const NOTICE = 'Fictional SpecGarage demonstration document. Not a real regulation.';
 
 const technical: DocumentSpec = {
-  file: 'demo-reglamento-tecnico.pdf',
-  title: 'REGLAMENTO TÉCNICO - COPA DEMO MONOMARCA 2026',
+  file: 'demo-technical-regulations.pdf',
+  title: 'TECHNICAL REGULATIONS - DEMO SINGLE-MAKE CUP 2026',
   pages: [
     {
-      heading: 'Disposiciones generales',
+      heading: 'General provisions',
       lines: [
-        'A: Concurrentes y mecánicos deben conocer este reglamento y el reglamento deportivo.',
-        'B: Todo elemento no mencionado expresamente como autorizado se considera prohibido.',
-        'C: Este reglamento rige del 1-01-2026 al 31-12-2026. Los cambios se comunican',
-        '   mediante anexos oficiales de la categoría.',
-        'D: La categoría es monomarca: todos los autos comparten modelo y componentes base.',
+        'A: Entrants and mechanics must know these regulations and the sporting regulations.',
+        'B: Anything not expressly mentioned as authorized is considered prohibited.',
+        'C: These regulations apply from 1-01-2026 to 31-12-2026. Changes are announced',
+        '   through official category annexes.',
+        'D: The category is single-make: all cars share the same model and base components.',
         '',
-        'Contenido: 2-Chasis  3-Trocha delantera  4-Trocha trasera  5-Peso  7-Neumáticos',
-        '8-Adquisición de datos  9-Verificación previa  10-Numeración  11-Frenos',
-        '12-Combustible  13-Seguridad  14-Señalización electrónica  15-Interpretación',
+        'Contents: 2-Chassis  3-Front track  4-Rear track  5-Weight  7-Tires',
+        '8-Data acquisition  9-Pre-event check  10-Numbering  11-Brakes',
+        '12-Fuel  13-Safety  14-Electronic flag device  15-Interpretation',
       ],
     },
     {
-      heading: 'Chasis y dimensiones',
+      heading: 'Chassis and dimensions',
       lines: [
-        '2- CHASIS: La distancia entre ejes debe estar entre 2495 y 2505 mm, ambos incluidos.',
-        'La medición se realiza con el auto en reposo sobre una superficie plana.',
+        '2- CHASSIS: The wheelbase must be between 2495 and 2505 mm, both included.',
+        'It is measured with the car at rest on a flat surface.',
         '',
-        '3- TROCHA DELANTERA: 1660 mm como máximo.',
+        '3- FRONT TRACK: 1660 mm maximum.',
         '',
-        '4- TROCHA TRASERA: 1648 mm como máximo.',
+        '4- REAR TRACK: 1648 mm maximum.',
         '',
-        'Las trochas se miden con el auto en reposo sobre una superficie plana.',
+        'Track widths are measured with the car at rest on a flat surface.',
       ],
     },
     {
-      heading: 'Peso y neumáticos',
+      heading: 'Weight and tires',
       lines: [
-        '5- PESO: El peso mínimo del auto con el piloto a bordo, equipado y en posición de',
-        'carrera, es de 1090 kg. El pesaje se realiza en una balanza sobre superficie plana',
-        'y nivelada.',
+        '5- WEIGHT: The minimum weight of the car with the driver aboard, equipped and in',
+        'racing position, is 1090 kg. Weighing is done on a scale on a flat, level surface.',
         '',
-        '7- NEUMÁTICOS',
-        '7-A: Se usan únicamente los neumáticos de la especificación provista por la categoría.',
-        '7-B: La profundidad mínima de dibujo en la banda central es de 2,0 mm.',
+        '7- TIRES',
+        '7-A: Only tires of the specification supplied by the category are used.',
+        '7-B: The minimum tread depth in the center band is 2.0 mm.',
       ],
     },
     {
-      heading: 'Datos, verificación previa y precintos',
+      heading: 'Data, pre-event check and seals',
       lines: [
-        '8- ADQUISICIÓN DE DATOS: Solo se permite el sistema de adquisición de datos',
-        'autorizado por la categoría. Cualquier otro GPS o sistema de telemetría está prohibido.',
+        '8- DATA ACQUISITION: Only the data acquisition system authorized by the category is',
+        'allowed. Any other GPS or telemetry system is prohibited.',
         '',
-        '9- VERIFICACIÓN TÉCNICA PREVIA: Antes de la clasificación cada auto se presenta en la',
-        'verificación técnica. Sin este trámite el auto no está habilitado para competir.',
-        'Se precinta el motor; el precinto debe estar íntegro y con su numeración registrada.',
+        '9- PRE-EVENT TECHNICAL CHECK: Before qualifying, each car reports to the technical',
+        'check. Without this procedure the car is not cleared to compete.',
+        'The engine is sealed; the seal must be intact and its number recorded.',
       ],
     },
     {
-      heading: 'Numeración, frenos y combustible',
+      heading: 'Numbering, brakes and fuel',
       lines: [
-        '10- NUMERACIÓN: Las cifras del número de competición son amarillas sobre un rectángulo',
-        'negro. La altura mínima de las cifras es de 20 cm.',
+        '10- NUMBERING: The competition number digits are yellow on a black rectangle.',
+        'The minimum digit height is 20 cm.',
         '',
-        '11- FRENOS: Los discos y las pastillas deben ser originales del modelo. El espesor',
-        'mínimo de la pastilla es de 3,5 mm.',
+        '11- BRAKES: Discs and pads must be original to the model. The minimum pad thickness',
+        'is 3.5 mm.',
         '',
-        '12- COMBUSTIBLE: Es provisto por la categoría. La densidad de la muestra, medida a',
-        '15 °C, debe estar entre 725 y 770 g/l, ambos incluidos.',
+        '12- FUEL: It is supplied by the category. The density of the sample, measured at',
+        '15 °C, must be between 725 and 770 g/l, both included.',
       ],
     },
     {
-      heading: 'Seguridad, señalización e interpretación',
+      heading: 'Safety, flag device and interpretation',
       lines: [
-        '13- SEGURIDAD: El extintor debe estar cargado, fijado al auto y con la carga vigente.',
-        'Los cinturones de seguridad deben estar dentro de su fecha de vencimiento.',
+        '13- SAFETY: The extinguisher must be charged, fixed to the car, and within its',
+        'charge date. Safety belts must be within their expiry date.',
         '',
-        '14- SEÑALIZACIÓN ELECTRÓNICA: Es obligatorio el dispositivo electrónico de señalización',
-        'de la categoría, instalado de forma segura y visible para el piloto.',
+        '14- ELECTRONIC FLAG DEVICE: The category flag device is mandatory, securely installed',
+        'and visible to the driver.',
         '',
-        '15- INTERPRETACIÓN: Los casos no previstos los resuelve la comisión técnica.',
+        '15- INTERPRETATION: Cases not covered are decided by the technical commission.',
       ],
     },
   ],
 };
 
 const sporting: DocumentSpec = {
-  file: 'demo-reglamento-deportivo.pdf',
-  title: 'REGLAMENTO DEPORTIVO - COPA DEMO MONOMARCA 2026',
+  file: 'demo-sporting-regulations.pdf',
+  title: 'SPORTING REGULATIONS - DEMO SINGLE-MAKE CUP 2026',
   pages: [
     {
-      heading: 'Alcance y calendario',
+      heading: 'Scope and calendar',
       lines: [
-        '1. La Copa Demo Monomarca es un torneo ficticio usado para demostrar SpecGarage.',
-        '2. Vigencia: 1-01-2026 al 31-12-2026.',
-        '3. Calendario: Fecha 1 (15-03), Fecha 2 (19-04), Fecha 3 (24-05).',
+        '1. The Demo Single-Make Cup is a fictional championship used to demonstrate SpecGarage.',
+        '2. Validity: 1-01-2026 to 31-12-2026.',
+        '3. Calendar: Round 1 (15-03), Round 2 (19-04), Round 3 (24-05).',
       ],
     },
     {
-      heading: 'Números de competición',
+      heading: 'Competition numbers',
       lines: [
-        '5. Cada auto lleva el número que le asigna la categoría, en los lugares establecidos.',
-        'Los números no se modifican durante el torneo.',
+        '5. Each car carries the number assigned by the category, in the places established.',
+        'Numbers are not changed during the championship.',
       ],
     },
     {
-      heading: 'Dispositivos obligatorios',
+      heading: 'Mandatory devices',
       lines: [
-        '7-A: El dispositivo electrónico de señalización debe estar instalado de forma segura',
-        'y a la vista del piloto, sin elementos que obstruyan la señal.',
-        '7-B: Es obligatoria la cámara de a bordo oficial, que queda a disposición de los',
-        'comisarios deportivos.',
+        "7-A: The electronic flag device must be securely installed and in the driver's view,",
+        'with nothing obstructing the signal.',
+        '7-B: The official onboard camera is mandatory and is kept available to the stewards.',
       ],
     },
     {
-      heading: 'Parque cerrado y reclamos',
+      heading: 'Closed park and protests',
       lines: [
-        '9. Finalizada la clasificación los autos pasan al régimen de parque cerrado.',
-        '10. Los reclamos se presentan por escrito dentro de los plazos que fije la categoría.',
+        '9. After qualifying, cars go into the closed-park regime.',
+        '10. Protests are submitted in writing within the deadlines set by the category.',
       ],
     },
   ],
@@ -159,7 +157,7 @@ function pageStream(doc: DocumentSpec, page: PageSpec, number: number): Buffer {
     .map((line, index) => `${index === 0 ? '' : 'T* '}(${pdfString(line)}) Tj`)
     .join('\n');
   parts.push(`BT /F1 10.5 Tf 56 730 Td 17 TL\n${body}\nET`);
-  const footer = `${NOTICE}  Página ${number} de ${doc.pages.length}`;
+  const footer = `${NOTICE}  Page ${number} of ${doc.pages.length}`;
   parts.push(`BT /F1 8 Tf 56 36 Td (${pdfString(footer)}) Tj ET`);
   return Buffer.from(parts.join('\n'), 'latin1');
 }
@@ -210,12 +208,7 @@ function buildPdf(doc: DocumentSpec): Buffer {
   return Buffer.concat(chunks);
 }
 
-const outputDirectory = join(
-  dirname(fileURLToPath(import.meta.url)),
-  '..',
-  'examples',
-  'demo-monomarca',
-);
+const outputDirectory = join(dirname(fileURLToPath(import.meta.url)), '..', 'examples', 'demo-cup');
 mkdirSync(outputDirectory, { recursive: true });
 for (const doc of [technical, sporting]) {
   const target = join(outputDirectory, doc.file);

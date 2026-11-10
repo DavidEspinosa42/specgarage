@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { editionId, parseRulepack, type Rulepack } from '../../src/domain/rulepack.ts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
-const demoDirectory = join(root, 'examples', 'demo-monomarca');
+const demoDirectory = join(root, 'examples', 'demo-cup');
 
 function load(path: string): Rulepack {
   const result = parseRulepack(JSON.parse(readFileSync(path, 'utf8')));
@@ -20,10 +20,10 @@ function load(path: string): Rulepack {
 describe('demo rulepack', () => {
   const demo = load(join(demoDirectory, 'rulepack.json'));
 
-  it('is a valid Spanish-language fictional category', () => {
-    expect(demo.category.code).toBe('COPA-DEMO');
-    expect(demo.language).toBe('es-AR');
-    expect(demo.category.name).toMatch(/ficticia/);
+  it('is a valid, English-language fictional category', () => {
+    expect(demo.category.code).toBe('DEMO-CUP');
+    expect(demo.language).toBe('en');
+    expect(demo.category.name).toMatch(/fictional/);
   });
 
   it('covers every vehicle system with at least one requirement', () => {
@@ -41,10 +41,10 @@ describe('demo rulepack', () => {
   });
 
   it('contains the acceptance-case limits from the project brief', () => {
-    const front = demo.requirements.find((r) => r.key === 'chasis-trocha-delantera-max');
+    const front = demo.requirements.find((r) => r.key === 'track-front-max');
     expect(front?.check).toEqual({ type: 'max', limit: '1660', unit: 'mm' });
-    const weight = demo.requirements.find((r) => r.key === 'chasis-peso-minimo');
-    expect(weight?.conditions.map((condition) => condition.key)).toContain('piloto-a-bordo');
+    const weight = demo.requirements.find((r) => r.key === 'weight-min');
+    expect(weight?.conditions.map((condition) => condition.key)).toContain('driver-aboard');
   });
 
   it('has an article reference with a page for every source, including cross-document ones', () => {
@@ -76,8 +76,8 @@ describe('second test category', () => {
   });
 
   it('reuses a requirement key with a different limit to prove keys are scoped per category', () => {
-    const inDemo = demo.requirements.find((r) => r.key === 'chasis-trocha-delantera-max');
-    const inOther = other.requirements.find((r) => r.key === 'chasis-trocha-delantera-max');
+    const inDemo = demo.requirements.find((r) => r.key === 'track-front-max');
+    const inOther = other.requirements.find((r) => r.key === 'track-front-max');
     expect(inDemo?.check).toMatchObject({ limit: '1660' });
     expect(inOther?.check).toMatchObject({ limit: '1500' });
   });

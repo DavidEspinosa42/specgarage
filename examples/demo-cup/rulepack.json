@@ -1,0 +1,267 @@
+{
+  "schema": "specgarage.rulepack/1",
+  "category": { "code": "DEMO-CUP", "name": "Demo Single-Make Cup (fictional)" },
+  "season": "2026",
+  "edition": "2026-R1",
+  "language": "en",
+  "documents": [
+    {
+      "key": "TR",
+      "title": "Technical Regulations - Demo Single-Make Cup 2026 (fictional)",
+      "type": "technical",
+      "edition": "Issue 1",
+      "effectiveFrom": "2026-01-01",
+      "effectiveTo": "2026-12-31",
+      "pageCount": 6,
+      "file": "demo-technical-regulations.pdf"
+    },
+    {
+      "key": "SR",
+      "title": "Sporting Regulations - Demo Single-Make Cup 2026 (fictional)",
+      "type": "sporting",
+      "edition": "Issue 1",
+      "effectiveFrom": "2026-01-01",
+      "effectiveTo": "2026-12-31",
+      "pageCount": 4,
+      "file": "demo-sporting-regulations.pdf"
+    }
+  ],
+  "systems": [
+    { "key": "chassis", "name": "Chassis, dimensions and weight" },
+    { "key": "brakes-tires", "name": "Brakes, wheels and tires" },
+    { "key": "fuel", "name": "Fuel" },
+    { "key": "electronics", "name": "Electronics and instrumentation" },
+    { "key": "safety", "name": "Safety equipment" },
+    { "key": "identification", "name": "Identification and exterior" },
+    { "key": "seals", "name": "Seals and pre-event check" }
+  ],
+  "events": [
+    { "key": "round-1", "name": "Round 1", "date": "2026-03-15" },
+    { "key": "round-2", "name": "Round 2", "date": "2026-04-19" },
+    { "key": "round-3", "name": "Round 3", "date": "2026-05-24" }
+  ],
+  "requirements": [
+    {
+      "key": "wheelbase-range",
+      "system": "chassis",
+      "title": "Wheelbase",
+      "check": { "type": "range", "min": "2495", "max": "2505", "unit": "mm" },
+      "conditions": [{ "key": "level-ground", "text": "Car at rest on a flat surface" }],
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "2", "page": 2 }]
+    },
+    {
+      "key": "track-front-max",
+      "system": "chassis",
+      "title": "Maximum front track width",
+      "check": { "type": "max", "limit": "1660", "unit": "mm" },
+      "conditions": [{ "key": "level-ground", "text": "Car at rest on a flat surface" }],
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "3", "page": 2 }]
+    },
+    {
+      "key": "track-rear-max",
+      "system": "chassis",
+      "title": "Maximum rear track width",
+      "check": { "type": "max", "limit": "1648", "unit": "mm" },
+      "conditions": [{ "key": "level-ground", "text": "Car at rest on a flat surface" }],
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "4", "page": 2 }]
+    },
+    {
+      "key": "weight-min",
+      "system": "chassis",
+      "title": "Minimum weight with the driver included",
+      "description": "The weight includes the driver aboard, equipped and in racing position.",
+      "check": { "type": "min", "limit": "1090", "unit": "kg" },
+      "conditions": [
+        {
+          "key": "driver-aboard",
+          "text": "Weighed with the driver aboard, equipped and in racing position"
+        },
+        { "key": "level-scale", "text": "Scale on a flat, level surface" }
+      ],
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "5", "page": 3 }]
+    },
+    {
+      "key": "tires-spec",
+      "system": "brakes-tires",
+      "title": "Tires of the category specification",
+      "check": {
+        "type": "manual",
+        "label": "visual",
+        "instruction": "The mounted tires are of the specification supplied by the category"
+      },
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "7-A", "page": 3 }]
+    },
+    {
+      "key": "tires-tread-min",
+      "system": "brakes-tires",
+      "title": "Minimum tread depth",
+      "check": { "type": "min", "limit": "2", "unit": "mm" },
+      "conditions": [{ "key": "center-band", "text": "Measured in the center band of the tire" }],
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "7-B", "page": 3 }]
+    },
+    {
+      "key": "brakes-original",
+      "system": "brakes-tires",
+      "title": "Original brake discs and pads",
+      "check": {
+        "type": "manual",
+        "label": "visual",
+        "instruction": "Discs and pads are original to the model"
+      },
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "11", "page": 5 }]
+    },
+    {
+      "key": "brakes-pad-thickness-min",
+      "system": "brakes-tires",
+      "title": "Minimum brake pad thickness",
+      "check": { "type": "min", "limit": "3.5", "unit": "mm" },
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "11", "page": 5 }]
+    },
+    {
+      "key": "fuel-supplied",
+      "system": "fuel",
+      "title": "Fuel supplied by the category",
+      "check": {
+        "type": "manual",
+        "label": "procedural",
+        "instruction": "The fuel used is the one supplied by the category"
+      },
+      "sources": [{ "document": "TR", "article": "12", "page": 5 }]
+    },
+    {
+      "key": "fuel-density",
+      "system": "fuel",
+      "title": "Fuel sample density",
+      "check": { "type": "range", "min": "725", "max": "770", "unit": "g/l" },
+      "conditions": [{ "key": "sample-15c", "text": "Density measured at 15 °C" }],
+      "evidence": ["document"],
+      "sources": [{ "document": "TR", "article": "12", "page": 5 }]
+    },
+    {
+      "key": "data-system-authorized",
+      "system": "electronics",
+      "title": "Only the authorized data acquisition system",
+      "check": {
+        "type": "manual",
+        "label": "obligation",
+        "instruction": "The only data acquisition system fitted is the one authorized by the category"
+      },
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "8", "page": 4 }]
+    },
+    {
+      "key": "telemetry-prohibited",
+      "system": "electronics",
+      "title": "No telemetry or additional GPS",
+      "check": {
+        "type": "manual",
+        "label": "prohibition",
+        "instruction": "No telemetry system or other GPS is fitted"
+      },
+      "sources": [{ "document": "TR", "article": "8", "page": 4 }]
+    },
+    {
+      "key": "flag-device-fitted",
+      "system": "electronics",
+      "title": "Electronic flag device fitted and visible",
+      "description": "It must be securely installed, visible to the driver, and with nothing obstructing the signal.",
+      "check": {
+        "type": "manual",
+        "label": "obligation",
+        "instruction": "The device is securely installed and in the driver's view"
+      },
+      "evidence": ["photo"],
+      "sources": [
+        { "document": "TR", "article": "14", "page": 6 },
+        { "document": "SR", "article": "7-A", "page": 3 }
+      ]
+    },
+    {
+      "key": "safety-extinguisher",
+      "system": "safety",
+      "title": "Extinguisher charged and fixed",
+      "check": {
+        "type": "manual",
+        "label": "obligation",
+        "instruction": "The extinguisher is charged, fixed to the car, and within its charge date"
+      },
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "13", "page": 6 }]
+    },
+    {
+      "key": "safety-belts-valid",
+      "system": "safety",
+      "title": "Safety belts within their expiry date",
+      "check": {
+        "type": "manual",
+        "label": "visual",
+        "instruction": "The safety belts are within their expiry date"
+      },
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "13", "page": 6 }]
+    },
+    {
+      "key": "safety-onboard-camera",
+      "system": "safety",
+      "title": "Official onboard camera fitted",
+      "check": {
+        "type": "manual",
+        "label": "obligation",
+        "instruction": "The official onboard camera is fitted"
+      },
+      "evidence": ["photo"],
+      "sources": [{ "document": "SR", "article": "7-B", "page": 3 }]
+    },
+    {
+      "key": "number-height-min",
+      "system": "identification",
+      "title": "Minimum height of the number digits",
+      "check": { "type": "min", "limit": "20", "unit": "cm" },
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "10", "page": 5 }]
+    },
+    {
+      "key": "number-colors",
+      "system": "identification",
+      "title": "Yellow digits on a black rectangle",
+      "check": {
+        "type": "manual",
+        "label": "visual",
+        "instruction": "The digits are yellow and on a black rectangle"
+      },
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "10", "page": 5 }]
+    },
+    {
+      "key": "seal-engine",
+      "system": "seals",
+      "title": "Engine seal intact and recorded",
+      "check": {
+        "type": "manual",
+        "label": "procedural",
+        "instruction": "The engine seal is intact and its number is in the register"
+      },
+      "evidence": ["photo"],
+      "sources": [{ "document": "TR", "article": "9", "page": 4 }]
+    },
+    {
+      "key": "pre-event-check-done",
+      "system": "seals",
+      "title": "Pre-event technical check completed",
+      "check": {
+        "type": "manual",
+        "label": "procedural",
+        "instruction": "The car passed the technical check before qualifying"
+      },
+      "sources": [{ "document": "TR", "article": "9", "page": 4 }]
+    }
+  ]
+}

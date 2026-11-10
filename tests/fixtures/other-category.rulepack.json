@@ -18,7 +18,7 @@
   "events": [{ "key": "round-1", "name": "Round 1", "date": "2026-06-07" }],
   "requirements": [
     {
-      "key": "chasis-trocha-delantera-max",
+      "key": "track-front-max",
       "system": "chassis",
       "title": "Maximum front track width",
       "check": { "type": "max", "limit": "1500", "unit": "mm" },

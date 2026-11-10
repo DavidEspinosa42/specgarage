@@ -25,9 +25,9 @@ beforeEach(() => {
   importEdition(env.ctx, loadRulepackFile(demoRulepackPath));
   addVehicle(env.ctx, 'DEMO-01');
   inspectionId = startInspection(env.ctx, {
-    edition: 'COPA-DEMO/2026/2026-R1',
+    edition: 'DEMO-CUP/2026/2026-R1',
     vehicleCode: 'DEMO-01',
-    eventKey: 'fecha-1',
+    eventKey: 'round-1',
     stationLabel: 'Bay-1',
   }).id;
 });
@@ -37,9 +37,9 @@ afterEach(() => env.cleanup());
 const jpeg = (n = 0) => Uint8Array.from([0xff, 0xd8, 0xff, 0xe0, 0, 0x10, n]);
 const pdf = (n = 0) => new TextEncoder().encode(`%PDF-1.4 evidence ${n}`);
 
-const TRACK = 'chasis-trocha-delantera-max';
-const WEIGHT = 'chasis-peso-minimo';
-const EXTINGUISHER = 'seguridad-extintor';
+const TRACK = 'track-front-max';
+const WEIGHT = 'weight-min';
+const EXTINGUISHER = 'safety-extinguisher';
 
 function find(view: ChecklistView, key: string): RequirementView {
   const found = view.systems
@@ -68,13 +68,13 @@ describe('getChecklist', () => {
   it('starts with every requirement Pending, grouped by system in rulepack order', () => {
     const view = getChecklist(env.ctx, inspectionId);
     expect(view.systems.map((system) => system.key)).toEqual([
-      'chasis',
-      'frenos-neumaticos',
-      'combustible',
-      'electronica',
-      'seguridad',
-      'identificacion',
-      'precintos',
+      'chassis',
+      'brakes-tires',
+      'fuel',
+      'electronics',
+      'safety',
+      'identification',
+      'seals',
     ]);
     const all = view.systems.flatMap((system) => system.requirements);
     expect(all).toHaveLength(20);
@@ -94,17 +94,17 @@ describe('getChecklist', () => {
     const view = getChecklist(env.ctx, inspectionId);
     expect(view.inspection).toMatchObject({
       vehicleCode: 'DEMO-01',
-      eventKey: 'fecha-1',
-      eventName: 'Fecha 1',
+      eventKey: 'round-1',
+      eventName: 'Round 1',
       eventDate: '2026-03-15',
       stationLabel: 'Bay-1',
     });
     expect(view.edition).toMatchObject({
-      categoryCode: 'COPA-DEMO',
+      categoryCode: 'DEMO-CUP',
       edition: '2026-R1',
-      language: 'es-AR',
+      language: 'en',
     });
-    expect(view.documents.map((doc) => doc.key)).toEqual(['TR', 'RD']);
+    expect(view.documents.map((doc) => doc.key)).toEqual(['TR', 'SR']);
     expect(view.documents.every((doc) => /^[0-9a-f]{64}$/.test(doc.sha256 ?? ''))).toBe(true);
   });
 
@@ -115,8 +115,8 @@ describe('getChecklist', () => {
     ]);
     expect(track.sources[0]?.fileSha256).toMatch(/^[0-9a-f]{64}$/);
     expect(track.checkSummary).toBe('≤ 1660 mm');
-    const camera = find(getChecklist(env.ctx, inspectionId), 'senalizacion-electronica');
-    expect(camera.sources.map((s) => s.documentKey)).toEqual(['TR', 'RD']);
+    const camera = find(getChecklist(env.ctx, inspectionId), 'flag-device-fitted');
+    expect(camera.sources.map((s) => s.documentKey)).toEqual(['TR', 'SR']);
   });
 
   it('rejects an unknown inspection', () => {
@@ -129,7 +129,7 @@ describe('recordObservation: results', () => {
     const view = record(TRACK, {
       value: '1658.0',
       unit: 'mm',
-      confirmedConditions: ['reposo-plano'],
+      confirmedConditions: ['level-ground'],
       files: [jpeg()],
     });
     expect(view.status).toBe('compliant');
@@ -157,15 +157,15 @@ describe('recordObservation: results', () => {
     const view = record(WEIGHT, {
       value: '1100',
       unit: 'kg',
-      confirmedConditions: ['balanza-nivelada', 'piloto-a-bordo', 'balanza-nivelada'],
+      confirmedConditions: ['level-scale', 'driver-aboard', 'level-scale'],
       files: [jpeg()],
     });
-    expect(view.current?.confirmedConditions).toEqual(['piloto-a-bordo', 'balanza-nivelada']);
+    expect(view.current?.confirmedConditions).toEqual(['driver-aboard', 'level-scale']);
   });
 
   it('keeps accents and trims empty notes to nothing', () => {
-    const withNote = record(TRACK, { value: '1', unit: 'mm', note: 'Medición con el ñandú' });
-    expect(withNote.current?.note).toBe('Medición con el ñandú');
+    const withNote = record(TRACK, { value: '1', unit: 'mm', note: 'Measured at the café garage' });
+    expect(withNote.current?.note).toBe('Measured at the café garage');
     const blank = record(TRACK, { value: '1', unit: 'mm', note: '   ' });
     expect(blank.current?.note).toBeNull();
   });
@@ -174,7 +174,7 @@ describe('recordObservation: results', () => {
     record(TRACK, {
       value: '1658',
       unit: 'mm',
-      confirmedConditions: ['reposo-plano'],
+      confirmedConditions: ['level-ground'],
       files: [jpeg()],
     });
     record(EXTINGUISHER, { verdict: 'fail', files: [jpeg(1)] });
@@ -267,14 +267,14 @@ describe('re-measuring and history', () => {
     record(TRACK, {
       value: '1661',
       unit: 'mm',
-      confirmedConditions: ['reposo-plano'],
+      confirmedConditions: ['level-ground'],
       files: [jpeg(1)],
     });
     env.advance(60);
     const second = record(TRACK, {
       value: '1658',
       unit: 'mm',
-      confirmedConditions: ['reposo-plano'],
+      confirmedConditions: ['level-ground'],
     });
 
     expect(second.observationCount).toBe(2);
@@ -293,13 +293,13 @@ describe('re-measuring and history', () => {
     record(TRACK, {
       value: '1658',
       unit: 'mm',
-      confirmedConditions: ['reposo-plano'],
+      confirmedConditions: ['level-ground'],
       files: [jpeg()],
     });
     const again = record(TRACK, {
       value: '1658',
       unit: 'mm',
-      confirmedConditions: ['reposo-plano'],
+      confirmedConditions: ['level-ground'],
     });
     expect(again.status).toBe('unverifiable');
     expect(again.reasons[0]).toMatchObject({ code: 'evidence-missing', detail: 'photo' });
@@ -326,7 +326,7 @@ describe('addEvidence', () => {
     const before = record(TRACK, {
       value: '1658',
       unit: 'mm',
-      confirmedConditions: ['reposo-plano'],
+      confirmedConditions: ['level-ground'],
     });
     expect(before.status).toBe('unverifiable');
 
@@ -370,9 +370,9 @@ describe('addEvidence', () => {
 
   it('refuses evidence prepared for an observation that has since been superseded', () => {
     // The page showed the first record; before the upload arrived, the requirement was recorded again.
-    record(TRACK, { value: '1661', unit: 'mm', confirmedConditions: ['reposo-plano'] });
+    record(TRACK, { value: '1661', unit: 'mm', confirmedConditions: ['level-ground'] });
     const staleId = env.ctx.store.currentObservations(inspectionId).get(TRACK)?.id ?? 0;
-    record(TRACK, { value: '1658', unit: 'mm', confirmedConditions: ['reposo-plano'] });
+    record(TRACK, { value: '1658', unit: 'mm', confirmedConditions: ['level-ground'] });
 
     expectError(
       () =>
@@ -415,31 +415,31 @@ describe('reproducibility', () => {
     record(TRACK, {
       value: '1658',
       unit: 'mm',
-      confirmedConditions: ['reposo-plano'],
+      confirmedConditions: ['level-ground'],
       files: [jpeg()],
     });
     const result = env.ctx.store.currentResults(inspectionId).get(TRACK);
     const snapshot = result?.ruleSnapshot as RuleSnapshot;
     expect(snapshot.editionId).toBe(
-      env.ctx.store.findEditionByLabel('COPA-DEMO', '2026', '2026-R1')?.id,
+      env.ctx.store.findEditionByLabel('DEMO-CUP', '2026', '2026-R1')?.id,
     );
     expect(snapshot.requirement.check).toEqual({ type: 'max', limit: '1660', unit: 'mm' });
     expect(result?.engineVersion).toBe(ENGINE_VERSION);
   });
 
   it('re-evaluating every stored result from its stored inputs gives the same answer', () => {
-    record(TRACK, { value: '1661', unit: 'mm', confirmedConditions: ['reposo-plano'] });
+    record(TRACK, { value: '1661', unit: 'mm', confirmedConditions: ['level-ground'] });
     attach(TRACK, [jpeg()]);
     record(TRACK, {
       value: '1658',
       unit: 'mm',
-      confirmedConditions: ['reposo-plano'],
+      confirmedConditions: ['level-ground'],
       files: [jpeg(2)],
     });
     record(WEIGHT, {
       value: '1200',
       unit: 'kg',
-      confirmedConditions: ['piloto-a-bordo'],
+      confirmedConditions: ['driver-aboard'],
       files: [jpeg(3)],
     });
     record(EXTINGUISHER, { verdict: 'undetermined' });

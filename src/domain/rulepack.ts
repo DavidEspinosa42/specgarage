@@ -175,10 +175,10 @@ export const rulepackSchema = z
     category: z.strictObject({ code: keySchema, name: textSchema(120) }),
     season: keySchema,
     edition: keySchema,
-    /** Language of the regulation text, as a BCP 47 tag such as "es-AR". */
+    /** Language of the regulation text, as a BCP 47 tag such as "en-US". */
     language: z
       .string()
-      .regex(/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/, 'must be a language tag such as "es-AR"')
+      .regex(/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/, 'must be a language tag such as "en-US"')
       .optional(),
     documents: z.array(documentSchema).min(1).max(50),
     systems: z.array(systemSchema).min(1).max(50),

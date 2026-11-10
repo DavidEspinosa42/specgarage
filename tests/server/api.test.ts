@@ -26,9 +26,9 @@ beforeEach(() => {
   importEdition(env.ctx, loadRulepackFile(demoRulepackPath));
   addVehicle(env.ctx, 'DEMO-01');
   inspectionId = startInspection(env.ctx, {
-    edition: 'COPA-DEMO/2026/2026-R1',
+    edition: 'DEMO-CUP/2026/2026-R1',
     vehicleCode: 'DEMO-01',
-    eventKey: 'fecha-1',
+    eventKey: 'round-1',
     stationLabel: 'Bay-1',
   }).id;
   app = createApp({ ctx: env.ctx, maxUploadBytes: MAX_UPLOAD, webRoot });
@@ -79,7 +79,7 @@ function form(fields: Record<string, string | string[]>, files: Uint8Array[] = [
 const post = (path: string, body: FormData, headers: Record<string, string> = {}) =>
   call(path, { method: 'POST', body }, { Origin: `http://${LOCAL}`, ...headers });
 
-const TRACK = `/api/inspections/${'{id}'}/requirements/chasis-trocha-delantera-max`;
+const TRACK = `/api/inspections/${'{id}'}/requirements/track-front-max`;
 const trackPath = (suffix: string) => TRACK.replace('{id}', inspectionId) + suffix;
 
 describe('local-only guard', () => {
@@ -201,9 +201,7 @@ describe('reading', () => {
     expect(unknown.status).toBe(404);
     expect(await unknown.json()).toMatchObject({ error: 'not-found' });
     expect((await call('/api/inspections/xyz')).status).toBe(400);
-    expect(
-      (await call(trackPath('/history').replace('chasis-trocha-delantera-max', 'nope'))).status,
-    ).toBe(404);
+    expect((await call(trackPath('/history').replace('track-front-max', 'nope'))).status).toBe(404);
     expect((await call('/api/nope')).status).toBe(404);
     expect((await call('/api/inspections', { method: 'DELETE' })).status).toBe(404);
   });
@@ -217,7 +215,7 @@ describe('recording', () => {
   ) =>
     post(
       trackPath('/observations'),
-      form({ value, unit: 'mm', conditions: ['reposo-plano'], ...extra }, files),
+      form({ value, unit: 'mm', conditions: ['level-ground'], ...extra }, files),
     );
 
   it('records a measurement with a photo and returns the judged requirement', async () => {
@@ -237,7 +235,7 @@ describe('recording', () => {
 
   it('records a manual verdict', async () => {
     const response = await post(
-      `/api/inspections/${inspectionId}/requirements/seguridad-extintor/observations`,
+      `/api/inspections/${inspectionId}/requirements/safety-extinguisher/observations`,
       form({ verdict: 'pass' }, [jpeg()]),
     );
     expect((await requirementOf(response)).status).toBe('compliant');
@@ -321,7 +319,7 @@ describe('recording', () => {
   });
 
   it('ignores the empty file part that browsers send when no file is chosen', async () => {
-    const data = form({ value: '1658', unit: 'mm', conditions: ['reposo-plano'] });
+    const data = form({ value: '1658', unit: 'mm', conditions: ['level-ground'] });
     data.append('files', new File([], ''));
     expect((await post(trackPath('/observations'), data)).status).toBe(201);
   });
@@ -332,7 +330,7 @@ describe('evidence and history', () => {
     requirementOf(
       await post(
         trackPath('/observations'),
-        form({ value, unit: 'mm', conditions: ['reposo-plano'] }, files),
+        form({ value, unit: 'mm', conditions: ['level-ground'] }, files),
       ),
     );
 
@@ -385,12 +383,12 @@ describe('evidence and history', () => {
     };
     const track = view.systems
       .flatMap((s) => s.requirements)
-      .find((r) => r.key === 'chasis-trocha-delantera-max');
+      .find((r) => r.key === 'track-front-max');
     expect(track?.status).toBe('unverifiable');
   });
 
   it('returns the history oldest first', async () => {
-    const fields = { unit: 'mm', conditions: ['reposo-plano'] };
+    const fields = { unit: 'mm', conditions: ['level-ground'] };
     await post(trackPath('/observations'), form({ ...fields, value: '1661' }, [jpeg()]));
     await post(trackPath('/observations'), form({ ...fields, value: '1658' }, [jpeg(1)]));
     const body = (await (await call(trackPath('/history'))).json()) as {
@@ -411,7 +409,7 @@ describe('stored files', () => {
   async function evidenceHash(): Promise<string> {
     const response = await post(
       trackPath('/observations'),
-      form({ value: '1658', unit: 'mm', conditions: ['reposo-plano'] }, [jpeg(7)]),
+      form({ value: '1658', unit: 'mm', conditions: ['level-ground'] }, [jpeg(7)]),
     );
     const view = await requirementOf(response);
     return view.current.evidence[0]?.sha256 ?? '';

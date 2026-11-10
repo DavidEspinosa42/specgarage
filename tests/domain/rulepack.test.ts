@@ -8,7 +8,7 @@ function valid(): Record<string, unknown> {
     category: { code: 'CAT-A', name: 'Category A (fictional)' },
     season: '2026',
     edition: '2026-R1',
-    language: 'es-AR',
+    language: 'en',
     documents: [
       { key: 'TR', title: 'Technical Regulations', type: 'technical', pageCount: 6 },
       { key: 'SR', title: 'Sporting Regulations', type: 'sporting' },
@@ -67,20 +67,20 @@ describe('parseRulepack — acceptance', () => {
     });
   });
 
-  it('accepts min and range checks, negative limits, and Spanish text', () => {
+  it('accepts min and range checks, negative limits, and accented text', () => {
     const pack = valid();
     (pack.requirements as Mutable[]).push(
       {
         key: 'weight-min',
         system: 'chassis',
-        title: 'Peso mínimo con piloto incluido',
+        title: 'Minimum weight, including the driver',
         check: { type: 'min', limit: '1090', unit: 'kg' },
         sources: [{ document: 'TR', article: '5', page: 3 }],
       },
       {
         key: 'camber',
         system: 'chassis',
-        title: 'Caída',
+        title: 'Camber',
         check: { type: 'range', min: '-3.5', max: '-1', unit: '°' },
         sources: [{ document: 'TR', article: '5-A', page: 3 }],
       },
@@ -365,7 +365,7 @@ describe('editionId', () => {
     const a = valid();
     const b = valid();
     requirement(a).title = 'Peso minimo';
-    requirement(b).title = 'Peso mínimo';
+    requirement(b).title = 'Café weight';
     expect(id(a)).not.toBe(id(b));
   });
 

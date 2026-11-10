@@ -28,11 +28,11 @@ describe('canonicalJson', () => {
   });
 
   it('keeps Unicode text exactly as written', () => {
-    expect(canonicalJson({ t: 'Trocha máxima — ñandú' })).toBe('{"t":"Trocha máxima — ñandú"}');
+    expect(canonicalJson({ t: 'Width — naïve café' })).toBe('{"t":"Width — naïve café"}');
   });
 
   it('distinguishes composed from decomposed accents', () => {
-    expect(canonicalJson('á')).not.toBe(canonicalJson('á'));
+    expect(canonicalJson('é')).not.toBe(canonicalJson('é'));
   });
 
   it('rejects values JSON cannot represent', () => {

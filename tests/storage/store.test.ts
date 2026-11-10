@@ -10,11 +10,11 @@ const PHOTO = 'b'.repeat(64);
 
 const edition: EditionRecord = {
   id: 'e'.repeat(64),
-  categoryCode: 'COPA-DEMO',
-  categoryName: 'Copa Demo Monomarca (ficticia)',
+  categoryCode: 'DEMO-CUP',
+  categoryName: 'Demo Single-Make Cup (fictional)',
   season: '2026',
   edition: '2026-R1',
-  content: '{"note":"Peso mínimo — ñandú"}',
+  content: '{"note":"Weight — naïve café"}',
   importedAt: T1,
 };
 
@@ -30,7 +30,7 @@ beforeEach(() => {
     id: 'aaaa1111-0000-4000-8000-000000000001',
     editionId: edition.id,
     vehicleCode: 'CAR-01',
-    eventKey: 'fecha-1',
+    eventKey: 'round-1',
     stationLabel: 'Bay-1',
     startedAt: T1,
   });
@@ -45,7 +45,7 @@ const observe = (requirementKey: string, value: string | null, recordedAt = T2) 
     value,
     unit: value === null ? null : 'mm',
     verdict: value === null ? 'pass' : null,
-    confirmedConditions: ['reposo-plano'],
+    confirmedConditions: ['level-ground'],
     note: null,
     recordedAt,
   });
@@ -56,8 +56,8 @@ describe('blobs, editions, vehicles, inspections', () => {
     expect(store.listEditionDocuments(edition.id)).toEqual([
       { documentKey: 'TR', blobSha256: PDF },
     ]);
-    expect(store.findEditionByLabel('COPA-DEMO', '2026', '2026-R1')).toEqual(edition);
-    expect(store.findEditionByLabel('COPA-DEMO', '2026', 'other')).toBeUndefined();
+    expect(store.findEditionByLabel('DEMO-CUP', '2026', '2026-R1')).toEqual(edition);
+    expect(store.findEditionByLabel('DEMO-CUP', '2026', 'other')).toBeUndefined();
     expect(store.listEditions()).toEqual([edition]);
   });
 
@@ -95,11 +95,11 @@ describe('blobs, editions, vehicles, inspections', () => {
       id: 'bbbb2222-0000-4000-8000-000000000002',
       editionId: edition.id,
       vehicleCode: 'CAR-01',
-      eventKey: 'fecha-2',
+      eventKey: 'round-2',
       stationLabel: 'Bay-1',
       startedAt: T3,
     });
-    expect(store.listInspections().map((row) => row.eventKey)).toEqual(['fecha-2', 'fecha-1']);
+    expect(store.listInspections().map((row) => row.eventKey)).toEqual(['round-2', 'round-1']);
   });
 });
 
@@ -128,7 +128,7 @@ describe('observations, evidence, and results', () => {
       value: null,
       unit: null,
       verdict: 'pass',
-      confirmedConditions: ['reposo-plano'],
+      confirmedConditions: ['level-ground'],
       note: null,
       recordedAt: T2,
     });
@@ -205,7 +205,7 @@ describe('observations, evidence, and results', () => {
       id: 'bbbb2222-0000-4000-8000-000000000002',
       editionId: edition.id,
       vehicleCode: 'CAR-01',
-      eventKey: 'fecha-2',
+      eventKey: 'round-2',
       stationLabel: 'Bay-1',
       startedAt: T3,
     });

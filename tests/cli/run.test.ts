@@ -102,7 +102,7 @@ describe('rulepack validate', () => {
     const result = await cli(['rulepack', 'validate', demoRulepackPath]);
     expect(result.status).toBe(0);
     expect(result.out).toContain(
-      'Valid: COPA-DEMO 2026 2026-R1 - 2 documents (2 with files), 7 systems, 3 events, 20 requirements.',
+      'Valid: DEMO-CUP 2026 2026-R1 - 2 documents (2 with files), 7 systems, 3 events, 20 requirements.',
     );
     expect(existsSync(dataDir)).toBe(false);
   });
@@ -133,14 +133,14 @@ describe('data commands', () => {
   it('imports a rulepack once and lists it', async () => {
     const first = await cli(['rulepack', 'import', demoRulepackPath]);
     expect(first.status).toBe(0);
-    expect(first.out).toContain('Imported: COPA-DEMO 2026 2026-R1');
+    expect(first.out).toContain('Imported: DEMO-CUP 2026 2026-R1');
     expect(first.out).toContain('documents stored: 2');
 
     const again = await cli(['rulepack', 'import', demoRulepackPath]);
     expect(again.out).toContain('Already imported (unchanged)');
 
     const list = await cli(['rulepack', 'list']);
-    expect(list.out).toContain('COPA-DEMO');
+    expect(list.out).toContain('DEMO-CUP');
     expect(list.out.trim().split('\n')).toHaveLength(3);
   });
 
@@ -166,19 +166,19 @@ describe('data commands', () => {
       'inspection',
       'start',
       '--edition',
-      'COPA-DEMO/2026/2026-R1',
+      'DEMO-CUP/2026/2026-R1',
       '--vehicle',
       'CAR-7',
       '--event',
-      'fecha-2',
+      'round-2',
       '--station',
       'Bay-3',
     ]);
     expect(started.status).toBe(0);
     expect(started.out).toMatch(/Started inspection [0-9a-f-]{36}/);
     const list = await cli(['inspection', 'list']);
-    expect(list.out).toContain('Fecha 2');
-    expect(list.out).toContain('COPA-DEMO 2026 2026-R1');
+    expect(list.out).toContain('Round 2');
+    expect(list.out).toContain('DEMO-CUP 2026 2026-R1');
   });
 
   it('explains why an inspection cannot start', async () => {
@@ -187,11 +187,11 @@ describe('data commands', () => {
       'inspection',
       'start',
       '--edition',
-      'COPA-DEMO/2026/2026-R1',
+      'DEMO-CUP/2026/2026-R1',
       '--vehicle',
       'NOBODY',
       '--event',
-      'fecha-1',
+      'round-1',
       '--station',
       'Bay-1',
     ]);
@@ -235,7 +235,7 @@ describe('seed demo', () => {
   it('sets up the demo category, vehicle, and inspection, and is repeatable', async () => {
     const first = await cli(['seed', 'demo']);
     expect(first.status).toBe(0);
-    expect(first.out).toContain('Imported: COPA-DEMO 2026 2026-R1');
+    expect(first.out).toContain('Imported: DEMO-CUP 2026 2026-R1');
     expect(first.out).toContain('Added vehicle DEMO-01');
     const id = /Started demo inspection ([0-9a-f-]{36})/.exec(first.out)?.[1];
     expect(id).toBeDefined();

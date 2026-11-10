@@ -68,7 +68,7 @@ describe('importEdition with the demo rulepack', () => {
     const outcome = importEdition(env.ctx, loadRulepackFile(demoRulepackPath));
     expect(outcome).toMatchObject({
       status: 'imported',
-      categoryCode: 'COPA-DEMO',
+      categoryCode: 'DEMO-CUP',
       season: '2026',
       edition: '2026-R1',
       documentsStored: 2,
@@ -76,7 +76,7 @@ describe('importEdition with the demo rulepack', () => {
     expect(outcome.id).toMatch(/^[0-9a-f]{64}$/);
 
     const documents = env.ctx.store.listEditionDocuments(outcome.id);
-    expect(documents.map((d) => d.documentKey)).toEqual(['RD', 'TR']);
+    expect(documents.map((d) => d.documentKey)).toEqual(['SR', 'TR']);
     for (const document of documents) {
       expect(env.ctx.blobs.check(document.blobSha256)).toBe('ok');
       expect(env.ctx.store.getBlob(document.blobSha256)?.mediaType).toBe('application/pdf');
@@ -108,7 +108,7 @@ describe('importEdition with the demo rulepack', () => {
     const loaded = loadRulepackFile(demoRulepackPath);
     importEdition(env.ctx, loaded);
     const changed = structuredClone(loaded.rulepack);
-    const front = changed.requirements.find((r) => r.key === 'chasis-trocha-delantera-max');
+    const front = changed.requirements.find((r) => r.key === 'track-front-max');
     if (front?.check.type === 'max') front.check.limit = '1664';
     expectError(
       () => importEdition(env.ctx, { ...loaded, rulepack: changed }),
@@ -136,7 +136,7 @@ describe('importEdition with the demo rulepack', () => {
     const other = importEdition(env.ctx, loadRulepackFile(otherRulepackPath));
     expect(other.id).not.toBe(demo.id);
     expect(other.documentsStored).toBe(0);
-    expect(listEditions(env.ctx).map((e) => e.categoryCode)).toEqual(['COPA-DEMO', 'OTHER-CUP']);
+    expect(listEditions(env.ctx).map((e) => e.categoryCode)).toEqual(['DEMO-CUP', 'OTHER-CUP']);
   });
 });
 
@@ -256,14 +256,14 @@ describe('loadRulepackFile', () => {
 describe('resolveEdition', () => {
   it('finds an edition by label, full id, or prefix', () => {
     const { id } = importEdition(env.ctx, loadRulepackFile(demoRulepackPath));
-    expect(resolveEdition(env.ctx, 'COPA-DEMO/2026/2026-R1').id).toBe(id);
+    expect(resolveEdition(env.ctx, 'DEMO-CUP/2026/2026-R1').id).toBe(id);
     expect(resolveEdition(env.ctx, id).id).toBe(id);
     expect(resolveEdition(env.ctx, id.slice(0, 8)).id).toBe(id);
   });
 
   it('reports unknown, malformed, and too-short references', () => {
     importEdition(env.ctx, loadRulepackFile(demoRulepackPath));
-    expectError(() => resolveEdition(env.ctx, 'COPA-DEMO/2026/nope'), 'not-found');
+    expectError(() => resolveEdition(env.ctx, 'DEMO-CUP/2026/nope'), 'not-found');
     expectError(() => resolveEdition(env.ctx, 'a/b'), 'not-found');
     expectError(() => resolveEdition(env.ctx, '00000000'), 'not-found');
     expectError(() => resolveEdition(env.ctx, 'abc'), 'invalid-input');

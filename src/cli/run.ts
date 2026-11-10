@@ -29,7 +29,7 @@ const EXIT_USAGE = 2;
 const EXIT_INTERNAL = 70;
 
 const DEMO_RULEPACK = fileURLToPath(
-  new URL('../../examples/demo-monomarca/rulepack.json', import.meta.url),
+  new URL('../../examples/demo-cup/rulepack.json', import.meta.url),
 );
 
 const WEB_ROOT = fileURLToPath(new URL('../../dist/web', import.meta.url));
@@ -380,14 +380,14 @@ export async function runCli(args: string[], io: CliIo): Promise<number> {
               (inspection) =>
                 inspection.editionId === outcome.id &&
                 inspection.vehicleCode === 'DEMO-01' &&
-                inspection.eventKey === 'fecha-1',
+                inspection.eventKey === 'round-1',
             );
           const inspection =
             existing ??
             startInspection(ctx, {
               edition: outcome.id,
               vehicleCode: 'DEMO-01',
-              eventKey: 'fecha-1',
+              eventKey: 'round-1',
               stationLabel: 'Bay-1',
             });
           out(
