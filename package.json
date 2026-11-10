@@ -15,7 +15,8 @@
     "format": "biome check --write .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "specgarage": "node src/cli/main.ts"
+    "specgarage": "node src/cli/main.ts",
+    "start": "node src/cli/main.ts serve"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.4",

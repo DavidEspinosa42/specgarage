@@ -2,6 +2,7 @@ import { fileURLToPath } from 'node:url';
 import { type ParseArgsOptionsConfig, parseArgs } from 'node:util';
 import { type Config, loadConfig } from '../config.ts';
 import { SpecGarageError } from '../domain/errors.ts';
+import { startServer } from '../server/start.ts';
 import { createContext, type ServiceContext } from '../service/context.ts';
 import { importEdition, listEditions } from '../service/editions.ts';
 import {
@@ -12,11 +13,14 @@ import {
 } from '../service/inspections.ts';
 import { openStorage } from '../storage/open.ts';
 import { loadRulepackFile } from '../storage/rulepack-file.ts';
+import { webAssetsExist } from '../storage/web-assets.ts';
 
 export interface CliIo {
   stdout: (text: string) => void;
   stderr: (text: string) => void;
   env: Readonly<Record<string, string | undefined>>;
+  /** Resolves when the user asks a long-running command such as `serve` to stop. */
+  shutdown?: Promise<void>;
 }
 
 const EXIT_OK = 0;
@@ -27,6 +31,8 @@ const EXIT_INTERNAL = 70;
 const DEMO_RULEPACK = fileURLToPath(
   new URL('../../examples/demo-monomarca/rulepack.json', import.meta.url),
 );
+
+const WEB_ROOT = fileURLToPath(new URL('../../dist/web', import.meta.url));
 
 export const USAGE = `SpecGarage - offline preparation checklists for single-make racing categories.
 
@@ -42,6 +48,7 @@ Commands:
   inspection start                Start an inspection (see options below)
   inspection list                 List inspections
   seed demo                       Import the fictional demo category and start a demo inspection
+  serve [--port <n>]              Start the local web interface on 127.0.0.1
 
 Options:
   --data-dir <dir>                Data directory (default: SPECGARAGE_DATA_DIR or ./data)
@@ -132,18 +139,21 @@ export async function runCli(args: string[], io: CliIo): Promise<number> {
   const out = (text: string) => io.stdout(`${text}\n`);
 
   try {
-    const [group, action, ...rest] = args;
+    const [group] = args;
     if (group === undefined || group === '--help' || group === '-h' || group === 'help') {
       io.stdout(USAGE);
       return EXIT_OK;
     }
-    if (rest.includes('--help') || action === '--help') {
+    if (args.includes('--help')) {
       io.stdout(USAGE);
       return EXIT_OK;
     }
 
     const config = loadConfig(io.env);
-    const command = `${group} ${action ?? ''}`.trim();
+    // Every command is "<group> <action>" except `serve`, which stands alone.
+    const standalone = group === 'serve';
+    const rest = args.slice(standalone ? 1 : 2);
+    const command = standalone ? group : `${group} ${args[1] ?? ''}`.trim();
 
     switch (command) {
       case 'rulepack validate': {
@@ -294,6 +304,39 @@ export async function runCli(args: string[], io: CliIo): Promise<number> {
               ),
             );
           }
+        } finally {
+          storage.close();
+        }
+        return EXIT_OK;
+      }
+
+      case 'serve': {
+        const { values } = parse(rest, { port: { type: 'string' } });
+        let port = config.port;
+        if (typeof values.port === 'string') {
+          // Port 0 asks the system for a free port, which is handy for scripts and tests.
+          if (!/^[0-9]{1,5}$/.test(values.port) || Number(values.port) > 65535) {
+            throw new UsageError('--port must be a whole number from 0 to 65535.');
+          }
+          port = Number(values.port);
+        }
+        if (io.shutdown === undefined) throw new Error('serve needs a shutdown signal.');
+        const { storage, ctx } = openContext(config, values['data-dir']);
+        try {
+          const server = await startServer({
+            ctx,
+            maxUploadBytes: config.maxUploadBytes,
+            webRoot: WEB_ROOT,
+            port,
+          });
+          out(`SpecGarage is running at ${server.url}`);
+          if (!webAssetsExist(WEB_ROOT)) {
+            out('The web interface has not been built yet; run "pnpm build" first.');
+          }
+          out('Press Ctrl+C to stop.');
+          await io.shutdown;
+          await server.close();
+          out('Stopped.');
         } finally {
           storage.close();
         }
