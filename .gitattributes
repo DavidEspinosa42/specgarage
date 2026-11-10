@@ -1,0 +1,9 @@
+# Normalize line endings so hashes and diffs are identical on every platform.
+* text=auto eol=lf
+
+# Binary files must never be rewritten.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
