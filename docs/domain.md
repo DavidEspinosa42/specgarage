@@ -4,37 +4,37 @@ SpecGarage turns a category's regulations into checks that a preparer can run ag
 
 ## Context: single-make regulations in Argentina
 
-The design follows how Argentine _categorías monomarca_ publish their rules:
+The design follows how Argentine single-make categories publish their rules:
 
-- A **technical regulation** (_reglamento técnico_) with numbered articles (engine, chassis, track widths, weight, tires, brakes, fuel, ballast, and so on), often with lettered sub-articles such as `7-B`, plus a block of lettered general provisions.
-- A **sporting regulation** (_reglamento deportivo_) that also contains vehicle-preparation duties: competition numbers, tire purchase limits, mandatory onboard devices and where they are installed, procedures before qualifying.
-- **Official annexes and communiqués** (_anexos oficiales_, _comunicados_) that amend either document during the season.
-- A **per-event particular regulation** (_reglamento particular de la prueba_, RPP) with event-specific conditions.
-- Pre-event technical verification (_verificación técnica previa_), sealing (_precintado_), and a closed-park regime (_parque cerrado_) run by technical officials.
+- A **technical regulation** with numbered articles (engine, chassis, track widths, weight, tires, brakes, fuel, ballast, and so on), often with lettered sub-articles such as `7-B`, plus a block of lettered general provisions.
+- A **sporting regulation** that also contains vehicle-preparation duties: competition numbers, tire purchase limits, mandatory onboard devices and where they are installed, procedures before qualifying.
+- **Official annexes and communiqués** that amend either document during the season.
+- A **per-event particular regulation** with event-specific conditions.
+- A pre-event technical verification, sealing of components, and a closed-park regime run by technical officials.
 
-Terms in the rules are often conditional on the event: a round number, a "special" round, a weekend with two finals, the first event of a participant, the last rounds of the season. Documents sometimes carry inconsistent metadata (for example a cover year that differs from a header year).
+Rules are often conditional on the event: a round number, a "special" round, a weekend with two finals, the first event of a participant, the last rounds of the season. Documents sometimes carry inconsistent metadata (for example a cover year that differs from a header year).
 
 ## Glossary
 
-| Term             | Spanish      | Meaning                                                                                                          |
-| ---------------- | ------------ | ---------------------------------------------------------------------------------------------------------------- |
-| Category         | Categoría    | An independent regulatory configuration                                                                          |
-| Season           | Temporada    | Period during which an edition applies                                                                           |
-| Rulepack         | —            | A JSON file describing a category-season: documents, systems, events, requirements                               |
-| Edition          | Edición      | One immutable, hashed import of a rulepack                                                                       |
-| Document         | Documento    | A regulation file (technical, sporting, appendix, bulletin, event) with title, edition, validity dates, and hash |
-| Source reference | Referencia   | Document + article + page that a requirement comes from                                                          |
-| Requirement      | Requisito    | A verifiable condition derived from the regulations                                                              |
-| System           | Sistema      | Grouping of requirements (chassis, brakes and tires, safety, and so on)                                          |
-| Check            | Verificación | How a requirement is evaluated: numeric limit or manual verdict (MVP)                                            |
-| Condition        | Condición    | A circumstance that must hold for a measurement to count (for example, weighed with the driver included)         |
-| Observation      | Observación  | One recorded measurement or verdict for a requirement in an inspection                                           |
-| Evidence         | Evidencia    | A photo or PDF attached to an observation                                                                        |
-| Result           | Resultado    | Status plus reasons for a requirement, derived from the observation and evidence                                 |
-| Inspection       | Inspección   | An evaluation of one vehicle at one event against one pinned edition                                             |
-| Vehicle          | Vehículo     | A physical car identified by an internal code                                                                    |
-| Event            | Evento       | A dated occasion (round) in the season                                                                           |
-| Observer station | —            | A non-personal label for where the inspection is done (for example `Bay-2`)                                      |
+| Term             | Meaning                                                                                                          |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Category         | An independent regulatory configuration                                                                          |
+| Season           | Period during which an edition applies                                                                           |
+| Rulepack         | A JSON file describing a category-season: documents, systems, events, requirements                               |
+| Edition          | One immutable, hashed import of a rulepack                                                                       |
+| Document         | A regulation file (technical, sporting, appendix, bulletin, event) with title, edition, validity dates, and hash |
+| Source reference | Document + article + page that a requirement comes from                                                          |
+| Requirement      | A verifiable condition derived from the regulations                                                              |
+| System           | Grouping of requirements (chassis, brakes and tires, safety, and so on)                                          |
+| Check            | How a requirement is evaluated: numeric limit or manual verdict (MVP)                                            |
+| Condition        | A circumstance that must hold for a measurement to count (for example, weighed with the driver included)         |
+| Observation      | One recorded measurement or verdict for a requirement in an inspection                                           |
+| Evidence         | A photo or PDF attached to an observation                                                                        |
+| Result           | Status plus reasons for a requirement, derived from the observation and evidence                                 |
+| Inspection       | An evaluation of one vehicle at one event against one pinned edition                                             |
+| Vehicle          | A physical car identified by an internal code                                                                    |
+| Event            | A dated occasion (round) in the season                                                                           |
+| Observer station | A non-personal label for where the inspection is done (for example `Bay-2`)                                      |
 
 ## Statuses
 

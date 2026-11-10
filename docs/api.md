@@ -38,7 +38,7 @@ Every response that carries a result includes the notice that results are intern
 Recording again supersedes the previous observation for that requirement; the earlier records stay in the history. Conditions and evidence belong to one observation and are never carried over.
 
 ```bash
-curl -X POST "http://127.0.0.1:8787/api/inspections/<id>/requirements/frenos-pastilla-espesor-min/observations" \
+curl -X POST "http://127.0.0.1:8787/api/inspections/<id>/requirements/brakes-pad-thickness-min/observations" \
   -F value=3.2 -F unit=mm -F "files=@photo.png"
 ```
 
@@ -46,7 +46,7 @@ curl -X POST "http://127.0.0.1:8787/api/inspections/<id>/requirements/frenos-pas
 {
   "notice": "Internal preparation assessment. This is not an official inspection, homologation, or certification.",
   "requirement": {
-    "key": "frenos-pastilla-espesor-min",
+    "key": "brakes-pad-thickness-min",
     "status": "non-compliant",
     "checkSummary": "≥ 3.5 mm",
     "reasons": [
@@ -55,7 +55,7 @@ curl -X POST "http://127.0.0.1:8787/api/inspections/<id>/requirements/frenos-pas
     "sources": [
       {
         "documentKey": "TR",
-        "documentTitle": "Reglamento Técnico - Copa Demo Monomarca 2026 (ficticio)",
+        "documentTitle": "Technical Regulations - Demo Single-Make Cup 2026 (fictional)",
         "article": "11",
         "page": 5,
         "fileSha256": "950f3a5b6095…"

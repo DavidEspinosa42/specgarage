@@ -12,7 +12,7 @@ Unknown keys are rejected everywhere, so a typo cannot silently drop a field.
   "category": { "code": "CAT-A", "name": "Category A (fictional)" },
   "season": "2026",
   "edition": "2026-R1",
-  "language": "es-AR",
+  "language": "en",
   "documents": [
     {
       "key": "TR",
@@ -48,7 +48,7 @@ Unknown keys are rejected everywhere, so a typo cannot silently drop a field.
 | `category`     | yes      | `code` (a key) and `name` (up to 120 characters)                                                            |
 | `season`       | yes      | A key, for example `2026`                                                                                   |
 | `edition`      | yes      | A key naming this edition, for example `2026-R1`. Reusing a label with changed content is refused at import |
-| `language`     | no       | BCP 47 tag of the regulation text, such as `es-AR`                                                          |
+| `language`     | no       | BCP 47 tag of the regulation text, such as `en` or `en-US`                                                  |
 | `documents`    | yes      | 1–50 documents                                                                                              |
 | `systems`      | yes      | 1–50 vehicle systems; array order is display order                                                          |
 | `events`       | yes      | 1–100 events                                                                                                |

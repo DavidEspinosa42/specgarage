@@ -1,6 +1,6 @@
 # SpecGarage
 
-SpecGarage is an offline tool for vehicle preparers and technical leads in single-make (_monomarca_) racing categories, designed first around Argentine categories and the way their regulations are organized: a technical regulation, a sporting regulation, official annexes, and a per-event particular regulation. It turns a category's regulations into a preparation checklist for one vehicle at one event, records measurements and evidence against each requirement, and keeps every result traceable to the regulation article and edition it was judged against. It supports a team's own preparation work; it does not replace official technical inspection, homologation, or certification.
+SpecGarage is an offline tool for vehicle preparers and technical leads in single-make racing categories, designed first around Argentine categories and the way their regulations are organized: a technical regulation, a sporting regulation, official annexes, and a per-event particular regulation. It turns a category's regulations into a preparation checklist for one vehicle at one event, records measurements and evidence against each requirement, and keeps every result traceable to the regulation article and edition it was judged against. It supports a team's own preparation work; it does not replace official technical inspection, homologation, or certification.
 
 > **Status: first functional release (v0.1.0).** It covers one complete workflow: import a category's rules, start an inspection, record measurements and verdicts with evidence, and see what is compliant, non-compliant, unverifiable, or still pending. See [Known limitations](#known-limitations) and [ROADMAP.md](ROADMAP.md) for what is not built yet.
 
@@ -16,7 +16,7 @@ SpecGarage is an offline tool for vehicle preparers and technical leads in singl
 - Append-only history of every observation, evidence file, and evaluation.
 - Command-line interface for rulepacks, vehicles, and inspections; a local web interface for the checklist.
 
-**Planned** (see [ROADMAP.md](ROADMAP.md)): Spanish/English interface with Argentine number entry, authorized component lists, a requirements editor, exceptions and conflict detection, PDF text import, PDF/CSV dossiers, offline exchange and reconciliation, instrument records, and a packaged installer. Permanently out of scope: official certification, OCR, AI interpretation of regulations, image recognition, telemetry, and identification of drivers or inspectors.
+**Planned** (see [ROADMAP.md](ROADMAP.md)): Argentine-style number entry (decimal comma), authorized component lists, a requirements editor, exceptions and conflict detection, PDF text import, PDF/CSV dossiers, offline exchange and reconciliation, instrument records, and a packaged installer. Permanently out of scope: official certification, OCR, AI interpretation of regulations, image recognition, telemetry, and identification of drivers or inspectors.
 
 ## Screenshots
 
@@ -147,7 +147,7 @@ SpecGarage runs entirely on the user's computer and makes no network requests. T
 
 ## Known limitations
 
-- The interface is English only, and numbers must use a dot as the decimal separator (a decimal comma is refused with an explanation, never guessed). Spanish and Argentine number entry are planned next.
+- The interface is English only, and numbers must use a dot as the decimal separator (a decimal comma is refused with an explanation, never guessed). Argentine-style number entry (decimal comma) is planned next.
 - Measurement units must match the rule's unit exactly; there is no conversion.
 - Only numeric limits and manual verdicts are evaluated. Authorized component lists, applicability conditions, exceptions, cumulative limits (such as tire counts or ballast), and conflict detection are not built.
 - Rulepacks are edited as JSON files; there is no editor, and no PDF text import or PDF/CSV export.

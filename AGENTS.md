@@ -4,7 +4,7 @@ Instructions for contributors and coding agents working on SpecGarage.
 
 ## Purpose
 
-SpecGarage helps vehicle preparers in single-make (_monomarca_) racing categories, primarily Argentine ones, turn regulations into per-vehicle, per-event checklists with evidence and traceability. Results are internal assessments, never official certification. Read [docs/domain.md](docs/domain.md) before changing behavior.
+SpecGarage helps vehicle preparers in single-make racing categories, primarily Argentine ones, turn regulations into per-vehicle, per-event checklists with evidence and traceability. Results are internal assessments, never official certification. Read [docs/domain.md](docs/domain.md) before changing behavior.
 
 ## Status
 
@@ -50,7 +50,7 @@ The layout is described in [docs/architecture.md](docs/architecture.md). The rul
 
 ## Data and privacy
 
-- Use synthetic data only. Never commit real regulation documents, text copied from them, real series names or marks, or the names of real people or organizations. Demo categories are fictional and written for this project. Regulation text in a demo may be in Spanish; that is data, not application language.
+- Use synthetic data only. Never commit real regulation documents, text copied from them, real series names or marks, or the names of real people or organizations. Demo categories are fictional and written for this project.
 - Never commit `.env`, databases, or evidence files. `data/` is ignored; keep it that way.
 - Do not add network calls, telemetry, or third-party assets. The product must work offline.
 
@@ -60,7 +60,7 @@ The layout is described in [docs/architecture.md](docs/architecture.md). The rul
 - TypeScript only uses erasable syntax (no enums, parameter properties, or runtime namespaces) because Node runs the files directly. Imports of local files include the `.ts` extension. Use `import type` for types.
 - Prefer small pure functions and explicit return types at module boundaries. Do not add abstractions before a second use exists.
 - Test observable behavior and invariants with deterministic, isolated tests. Inject the clock and use temporary directories; tests must never touch a real data directory.
-- Treat text as Unicode (Spanish accents and `ñ` are normal data). Never normalize or strip characters in stored regulation text.
+- Treat text as Unicode: accented letters are normal data. Never normalize or strip characters in stored regulation text.
 
 ## Dependencies
 

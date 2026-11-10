@@ -34,7 +34,7 @@ pnpm install --frozen-lockfile
 pnpm specgarage seed demo           # import the fictional demo category, add a vehicle, start an inspection
 pnpm specgarage rulepack list
 pnpm specgarage inspection list
-pnpm specgarage rulepack validate examples/demo-monomarca/rulepack.json
+pnpm specgarage rulepack validate examples/demo-cup/rulepack.json
 ```
 
 Other commands: `db migrate`, `rulepack import <file>`, `vehicle add <code>`, `vehicle list`, `inspection start --edition … --vehicle … --event … --station …`. Run `pnpm specgarage --help` for the full list. Exit status is 0 on success, 1 for an expected failure (invalid input, not found, conflict), and 2 for a usage error.

@@ -81,7 +81,7 @@ Triggers reject updates and deletes on all of them, and tie evidence and results
 
 ## Not built yet
 
-Authorized component lists, applicability conditions, exceptions, conflict detection, PDF text extraction, exports, closed dossiers, offline exchange, instruments, Spanish interface, and packaging are planned in [ROADMAP.md](../ROADMAP.md).
+Authorized component lists, applicability conditions, exceptions, conflict detection, PDF text extraction, exports, closed dossiers, offline exchange, instruments, locale-aware number entry, and packaging are planned in [ROADMAP.md](../ROADMAP.md).
 
 ## Decisions
 
