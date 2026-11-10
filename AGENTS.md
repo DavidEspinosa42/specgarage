@@ -8,7 +8,7 @@ SpecGarage helps vehicle preparers in single-make (_monomarca_) racing categorie
 
 ## Status
 
-Early development. Check [ROADMAP.md](ROADMAP.md) for which phase is current. Do not describe planned behavior as implemented in any document.
+First functional release (v0.1.0). Check [ROADMAP.md](ROADMAP.md) for which phase is current. Do not describe planned behavior as implemented in any document.
 
 ## Commands
 
@@ -18,9 +18,12 @@ pnpm check                       # Biome lint/format check + TypeScript type che
 pnpm test                        # Vitest
 pnpm format                      # apply Biome formatting, organize imports, safe fixes
 pnpm specgarage <command>        # run the CLI (see docs/development.md)
+pnpm build                      # build the web interface into dist/web
+pnpm start                       # serve it on 127.0.0.1:8787 (after pnpm build)
+pnpm dev:web                     # rebuild the interface when web/ changes
 ```
 
-Run `pnpm check` and `pnpm test` before every commit and report the real result. The server and UI build commands are added here when they exist.
+Run `pnpm check` and `pnpm test` before every commit and report the real result. After changing anything in `web/`, rebuild and check the result in a real browser; type checks cannot show that the screen works.
 
 ## Layout and boundaries
 
@@ -28,6 +31,7 @@ The layout is described in [docs/architecture.md](docs/architecture.md). The rul
 
 - `domain/` and `engine/` are pure: no file system, database, network, clock, or randomness. Inputs in, results out.
 - `storage/` is the only code that touches SQLite or the file system.
+- The web bundle in `web/` talks to the server over HTTP only and keeps its own copy of the API types (`web/src/api-types.ts`); `tests/web-contract.test.ts` keeps it in step. `tests/architecture.test.ts` enforces these boundaries.
 - The CLI and the HTTP server are thin front ends over the same service functions. Business rules never live in them.
 - Validate every external input (files, HTTP, CLI arguments) with the Zod schemas at the boundary.
 
@@ -41,7 +45,8 @@ The layout is described in [docs/architecture.md](docs/architecture.md). The rul
 6. Observations, evidence, and results are append-only; corrections are new records.
 7. A stored result can be reproduced from its stored inputs and rule snapshot.
 8. No personal data fields: vehicles use internal codes, observers use a station label.
-9. Anything that shows a result also states that it is an internal assessment, not an official one.
+9. Anything that shows a result also states that it is an internal assessment, not an official one. API responses that carry results include the notice.
+10. Conditions and evidence belong to one observation. A new observation starts with neither, the interface never pre-ticks conditions from an earlier record, and an evidence upload names the observation it was prepared for and is refused if that is no longer current.
 
 ## Data and privacy
 

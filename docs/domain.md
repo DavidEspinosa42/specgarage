@@ -38,14 +38,14 @@ Terms in the rules are often conditional on the event: a round number, a "specia
 
 ## Statuses
 
-| Status         | Meaning                                                                  | Produced in                                 |
-| -------------- | ------------------------------------------------------------------------ | ------------------------------------------- |
-| Pending        | Nothing recorded yet                                                     | MVP                                         |
-| Compliant      | Satisfies the requirement based on the recorded observation and evidence | MVP                                         |
-| Non-Compliant  | A violation was identified                                               | MVP                                         |
-| Unverifiable   | Evidence, conditions, or information are insufficient                    | MVP                                         |
-| Not Applicable | The requirement's activation conditions are not met                      | Phase 6                                     |
-| Conflict       | Incompatible rules or unresolved ambiguity                               | Phase 6 (import report), Phase 10 (runtime) |
+| Status         | Meaning                                                                  | Produced in              |
+| -------------- | ------------------------------------------------------------------------ | ------------------------ |
+| Pending        | Nothing recorded yet                                                     | MVP                      |
+| Compliant      | Satisfies the requirement based on the recorded observation and evidence | MVP                      |
+| Non-Compliant  | A violation was identified                                               | MVP                      |
+| Unverifiable   | Evidence, conditions, or information are insufficient                    | MVP                      |
+| Not Applicable | The requirement's activation conditions are not met                      | Phase 6 (planned)        |
+| Conflict       | Incompatible rules or unresolved ambiguity                               | Phase 6 and 10 (planned) |
 
 Results are internal assessments. They are not homologation and not an official technical decision; the regulations typically reserve interpretation to the category's technical commission, and SpecGarage never resolves an ambiguity on its own.
 
@@ -64,6 +64,8 @@ Limits and measurements are decimal strings: optional leading minus, digits, opt
 
 A requirement can list **conditions** (each with a key and text) and **required evidence** (`photo`, `document`). To count as a complete observation the observer must confirm every condition, and the current observation must have at least one attached file of each required kind. Evidence kind comes from the file's detected type: JPEG, PNG, and WebP are photos; PDF is a document.
 
+Conditions and evidence belong to one observation. A new observation starts with neither: the interface never pre-ticks conditions from an earlier record, and an evidence upload names the observation it was prepared for, so it is refused rather than attached to a newer record ([ADR 0006](adr/0006-evidence-bound-to-observation.md)). Recording an observation with its files in one request is atomic: the observation, its evidence, and its result are all stored or none are.
+
 ### Status derivation
 
 1. No observation → **Pending**.
@@ -72,7 +74,7 @@ A requirement can list **conditions** (each with a key and text) and **required 
 4. Numeric: compare the exact value to the limit → **Compliant** or **Non-Compliant**.
 5. Manual: `pass` → **Compliant**, `fail` → **Non-Compliant**.
 
-Recording a new observation supersedes the previous one for that requirement; the older records stay in the history. Evidence belongs to the observation it was attached to, so a re-measurement starts with no evidence.
+Recording a new observation supersedes the previous one for that requirement; the older records stay in the history. A re-measurement starts with no evidence, and each evaluation of an observation is stored, so adding evidence later adds a result to that observation's history rather than changing an earlier one.
 
 ### Editions and history
 
