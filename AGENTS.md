@@ -16,10 +16,11 @@ Early development. Check [ROADMAP.md](ROADMAP.md) for which phase is current. Do
 pnpm install --frozen-lockfile   # install exactly what the lockfile says
 pnpm check                       # Biome lint/format check + TypeScript type check
 pnpm test                        # Vitest
-pnpm format                      # apply Biome formatting
+pnpm format                      # apply Biome formatting, organize imports, safe fixes
+pnpm specgarage <command>        # run the CLI (see docs/development.md)
 ```
 
-Run `pnpm check` and `pnpm test` before every commit and report the real result. Further commands (CLI, server, UI build) are added here when they exist.
+Run `pnpm check` and `pnpm test` before every commit and report the real result. The server and UI build commands are added here when they exist.
 
 ## Layout and boundaries
 

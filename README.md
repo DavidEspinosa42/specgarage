@@ -2,7 +2,7 @@
 
 SpecGarage is an offline tool for vehicle preparers and technical leads in single-make (_monomarca_) racing categories, designed first around Argentine categories and the way their regulations are organized: a technical regulation, a sporting regulation, official annexes, and a per-event particular regulation. It turns a category's regulations into a preparation checklist for one vehicle at one event, records measurements and evidence against each requirement, and keeps every result traceable to the regulation article and edition it was judged against. It supports a team's own preparation work; it does not replace official technical inspection, homologation, or certification.
 
-> **Status: early development. The application is not implemented yet.** The repository currently contains the toolchain, CI definition, and design documents. Everything under "Key Features" is planned, not available. This README is updated as behavior is implemented.
+> **Status: early development.** Implemented so far: the rulepack format and validation, the SQLite storage layer, importing rulepacks as immutable editions, registering vehicles, starting inspections, and a command-line interface. Not implemented yet: recording measurements, the evaluation engine, and the web interface. Items under "Key Features" are marked as planned until they exist. This README is updated as behavior is implemented.
 
 ## Key Features
 
@@ -18,7 +18,16 @@ Planned later, in this order: a Spanish/English interface with Argentine number 
 
 ## Quick Start
 
-Not available yet. The only runnable commands today are the quality checks listed under [Development](#development).
+The command line works today; the checklist screen does not exist yet.
+
+```bash
+pnpm install --frozen-lockfile
+pnpm specgarage seed demo        # fictional demo category, a vehicle, and an inspection
+pnpm specgarage rulepack list
+pnpm specgarage inspection list
+```
+
+Data is written to `./data` (see [docs/development.md](docs/development.md)). Recording measurements and viewing the checklist arrive with the engine and the web interface (see [ROADMAP.md](ROADMAP.md)).
 
 ## Architecture
 
@@ -28,13 +37,15 @@ Two invariants shape everything: a published regulation edition is immutable, an
 
 ## Tech Stack
 
-| Area            | Technology | Version       | Purpose                                               |
-| --------------- | ---------- | ------------- | ----------------------------------------------------- |
-| Runtime         | Node.js    | 26.13.0 (LTS) | Runs the application and tests                        |
-| Package manager | pnpm       | 12.17.0       | Dependencies, 7-day release-age policy                |
-| Language        | TypeScript | 7.0.2         | Strict typing; runs directly on Node (type stripping) |
-| Lint and format | Biome      | 2.6.4         | One tool for both                                     |
-| Tests           | Vitest     | 5.1.0         | Unit and integration tests                            |
+| Area            | Technology  | Version         | Purpose                                               |
+| --------------- | ----------- | --------------- | ----------------------------------------------------- |
+| Runtime         | Node.js     | 26.13.0 (LTS)   | Runs the application and tests                        |
+| Package manager | pnpm        | 12.17.0         | Dependencies, 7-day release-age policy                |
+| Language        | TypeScript  | 7.0.2           | Strict typing; runs directly on Node (type stripping) |
+| Validation      | Zod         | 4.6.7           | Rulepack schema and input validation                  |
+| Database        | node:sqlite | built into Node | Local storage, no native dependency                   |
+| Lint and format | Biome       | 2.6.4           | One tool for both                                     |
+| Tests           | Vitest      | 5.1.0           | Unit and integration tests                            |
 
 `package.json` and `pnpm-lock.yaml` are authoritative for versions. Technologies are added to this table when they are first used.
 
@@ -42,11 +53,17 @@ Two invariants shape everything: a published regulation edition is immutable, an
 
 ```text
 .github/workflows/ci.yml   Lint, type check, and tests on Linux and Windows
+src/domain/                Pure types, rulepack schema, exact decimals, hashing
+src/storage/               SQLite schema, typed store, content-addressed file store
+src/service/               Use cases: import editions, vehicles, inspections
+src/cli/                   Command-line interface
+examples/demo-monomarca/   Fictional demo category and its PDFs
+scripts/                   Generator for the demo PDFs
 docs/                      Design documents and decision records
 tests/                     Automated tests
 ```
 
-Source directories are added as the implementation lands; the planned layout is in [docs/architecture.md](docs/architecture.md).
+`src/engine/`, `src/server/`, and `web/` are planned and not implemented yet; see [docs/architecture.md](docs/architecture.md).
 
 ## Development
 
@@ -58,13 +75,15 @@ pnpm check   # Biome lint/format check and TypeScript type check
 pnpm test    # Vitest
 ```
 
-Runtime settings are described in `.env.example`.
+Runtime settings are described in `.env.example`; the full guide is [docs/development.md](docs/development.md).
 
 ## Documentation
 
 - [ROADMAP.md](ROADMAP.md) — MVP scope and the phased path to production readiness
 - [AGENTS.md](AGENTS.md) — instructions for contributors and coding agents
+- [docs/development.md](docs/development.md) — setup, commands, data directory, troubleshooting
 - [docs/domain.md](docs/domain.md) — terminology, rules, invariants, and scenarios
+- [docs/rulepack-format.md](docs/rulepack-format.md) — the rulepack JSON format
 - [docs/architecture.md](docs/architecture.md) — components, data flow, constraints
 - [docs/landscape.md](docs/landscape.md) — existing alternatives and positioning
 - [docs/adr/](docs/adr/) — architecture decision records
